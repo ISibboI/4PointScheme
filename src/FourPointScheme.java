@@ -55,6 +55,8 @@ public class FourPointScheme {
 			out.println("ratio: " + maxEdgeLengthRatio + "; points: " + pointsToString(startingPoints));
 		}
 		
+		out.close();
+		
 //		Thread.sleep(1000);
 //		
 //		drawPoints(drawFrame, points);
