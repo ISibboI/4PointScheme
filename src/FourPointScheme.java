@@ -39,8 +39,17 @@ public class FourPointScheme {
 				points[i] = new Point2D.Double(Math.random(), Math.random());
 			}
 			
+			double lastEdgeLengthRatio = maxEdgeLengthRatio(points);
+			
 			for (int i = 0; i < 17; i++) {
 				points = applyConvexityPreservingFourPointScheme(points, 0.9999, 1.0 / 16.0);
+				double edgeLengthRatio = maxEdgeLengthRatio(points);
+				
+				if (edgeLengthRatio > lastEdgeLengthRatio) {
+					System.out.println("Edge length ratio rised");
+				}
+	
+				lastEdgeLengthRatio = edgeLengthRatio;
 //				System.out.print("Applied scheme " + (i + 1) + " times. ");
 //				System.out.println("Maximum edge length ratio is " + maxEdgeLengthRatio(points) + ".");
 			}
