@@ -2,12 +2,15 @@ import java.awt.BufferCapabilities;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Insets;
+import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferStrategy;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
+
+import org.omg.stub.java.rmi._Remote_Stub;
 
 /**
  * A JPanel implementation that supports drawing on it's background.
@@ -72,6 +75,8 @@ public class DrawFrame extends JFrame {
 		_renderGraphics = (Graphics2D) _bufferStrategy.getDrawGraphics();
 		_originalTransform = _renderGraphics.getTransform();
 		_renderGraphics.transform(_contentTransformation);
+		_renderGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		_renderGraphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 
 		return getRenderGraphics();
 	}
