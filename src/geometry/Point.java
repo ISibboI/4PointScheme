@@ -37,7 +37,7 @@ public class Point {
 		return sub(other).distanceToOrigin();
 	}
 
-	private double distanceToOrigin() {
+	public double distanceToOrigin() {
 		return Math.sqrt(_x * _x + _y * _y);
 	}
 
@@ -47,5 +47,9 @@ public class Point {
 
 	public Point orthogonal() {
 		return new Point(-_y, _x);
+	}
+
+	public double scalarProduct(Point other) {
+		return _x * other._x + _y * other._y;
 	}
 }

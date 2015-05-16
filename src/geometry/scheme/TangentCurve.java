@@ -76,16 +76,6 @@ public class TangentCurve extends DefaultCurve {
 		_tangents[i] = tangent;
 	}
 
-	protected void copyTangentsToSubdivided(TangentCurve subdivided) {
-		if (subdivided.size() != size() * 2 - 1) {
-			throw new IllegalArgumentException("Subdivided curve has wrong length.");
-		}
-
-		for (int i = 0; i < subdivided.size(); i += 2) {
-			subdivided.setTangent(i, getTangent(i / 2));
-		}
-	}
-
 	private Point getNewPoint(PointSelector selector) {
 		Point a = selector.getA(this);
 		Point b = selector.getB(this);
@@ -107,13 +97,12 @@ public class TangentCurve extends DefaultCurve {
 		if (tbCutDistance <= 0) {
 			tbCutDistance = getTensionParameter() / _displacementParameter;
 		}
-		
+
 		if (tcCutDistance <= 0) {
 			tcCutDistance = getTensionParameter() / _displacementParameter;
 		}
-		
-		if (!Double.isFinite(tbCutDistance)
-				|| !Double.isFinite(tcCutDistance)) {
+
+		if (!Double.isFinite(tbCutDistance) || !Double.isFinite(tcCutDistance)) {
 			throw new RuntimeException("Error cutting lines: " + tbCutDistance + ", " + tcCutDistance);
 		}
 
@@ -130,14 +119,69 @@ public class TangentCurve extends DefaultCurve {
 				_tangentChooser);
 
 		copyPointsToSubdivided(result);
-		copyTangentsToSubdivided(result);
 
 		for (int i = 1; i < result.size() - 1; i += 2) {
 			pointSelector.setIndex(i / 2);
 			result.setPoint(i, getNewPoint(pointSelector));
-			result.chooseTangent(i);
 		}
 
+		result.chooseAllTangents();
+		result.setTangent(0, getTangent(0));
+		result.setTangent(result.size() - 1, getTangent(size() - 1));
+
 		return result;
+	}
+
+	/**
+	 * Calculates the angle fraction has to be limited for theorem 6.7 to work.
+	 */
+	public double getMinimumTangentAngleFraction() {
+		double minAngleFraction = Double.POSITIVE_INFINITY;
+
+		for (int i = 2; i < size() - 2; i += 2) {
+			Point a = getPoint(i - 2);
+			Point b = getPoint(i - 1);
+			Point c = getPoint(i);
+			Point d = getPoint(i + 1);
+			Point e = getPoint(i + 2);
+			Line tangent = getTangent(i);
+
+			double preFracAngle = new Line(c, b).angle(tangent);
+			double preAngle = new Line(c, a).angle(tangent);
+			double succFracAngle = new Line(c, d).angle(tangent);
+			double succAngle = new Line(c, e).angle(tangent);
+
+			if (preFracAngle > preAngle) {
+				preFracAngle = Math.PI - preFracAngle;
+				preAngle = Math.PI - preAngle;
+			}
+
+			if (succFracAngle > succAngle) {
+				succFracAngle = Math.PI - succFracAngle;
+				succAngle = Math.PI - succAngle;
+			}
+
+			if (preFracAngle / preAngle < minAngleFraction) {
+				minAngleFraction = preFracAngle / preAngle;
+			}
+
+			if (1 - preFracAngle / preAngle < minAngleFraction) {
+				minAngleFraction = 1 - preFracAngle / preAngle;
+			}
+
+			if (succFracAngle / succAngle < minAngleFraction) {
+				minAngleFraction = succFracAngle / succAngle;
+			}
+
+			if (1 - succFracAngle / succAngle < minAngleFraction) {
+				minAngleFraction = 1 - succFracAngle / succAngle;
+			}
+
+			if (minAngleFraction < 0) {
+				throw new RuntimeException("Error calculating tangent angle fractions.");
+			}
+		}
+
+		return minAngleFraction;
 	}
 }
