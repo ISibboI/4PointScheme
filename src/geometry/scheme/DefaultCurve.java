@@ -88,7 +88,7 @@ public class DefaultCurve extends AbstractCurve {
 	}
 
 	@Override
-	public Curve subdivide(PointSelector pointSelector) {
+	public Curve subdivide(PointSelector pointSelector, int step) {
 		DefaultCurve result = new DefaultCurve(size() * 2 - 1, _tensionParameter);
 		
 		copyPointsToSubdivided(result);

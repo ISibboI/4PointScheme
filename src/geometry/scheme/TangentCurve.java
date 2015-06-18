@@ -114,7 +114,8 @@ public class TangentCurve extends DefaultCurve {
 	}
 
 	@Override
-	public Curve subdivide(PointSelector pointSelector) {
+	public Curve subdivide(PointSelector pointSelector, int step) {
+		_tangentChooser.setStep(step);
 		TangentCurve result = new TangentCurve(size() * 2 - 1, getTensionParameter(), _displacementParameter,
 				_tangentChooser);
 

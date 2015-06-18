@@ -1,5 +1,4 @@
 package ui;
-import java.awt.BufferCapabilities;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Insets;
@@ -11,14 +10,14 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
-import org.omg.stub.java.rmi._Remote_Stub;
-
 /**
  * A JPanel implementation that supports drawing on it's background.
  * @author Sebastian Schmidt
  * @since 0.0.0
  */
 public class DrawFrame extends JFrame {
+	private static final long serialVersionUID = 1L;
+	
 	private boolean _isRendering = false;
 	private Graphics2D _renderGraphics;
 	private AffineTransform _contentTransformation;

@@ -1,7 +1,5 @@
 package geometry;
 
-import geometry.scheme.PointSelector;
-
 import java.awt.Graphics2D;
 import java.awt.geom.Path2D;
 import java.util.Iterator;

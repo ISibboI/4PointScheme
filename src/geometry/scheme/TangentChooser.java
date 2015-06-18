@@ -9,4 +9,6 @@ public interface TangentChooser {
 	Line chooseFirstTangent(Point b, Point c);
 
 	Line chooseLastTangent(Point a, Point b);
+
+	void setStep(int step);
 }

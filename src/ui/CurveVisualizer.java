@@ -62,4 +62,8 @@ public class CurveVisualizer {
 		_drawFrame.switchToUIRender();
 		_drawFrame.finishRender();
 	}
+
+	public void dispose() {
+		_drawFrame.dispose();
+	}
 }

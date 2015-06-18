@@ -20,12 +20,22 @@ public class DefaultFourPointScheme implements FourPointScheme {
 		Curve currentCurve = _startingCurve;
 
 		System.out.println("Starting maximum edge length ratio: " + CurveProperties.maxEdgeLengthRatio(_startingCurve));
+		System.out.println("Starting maximum edge length after next ratio: " + CurveProperties.maxEdgeLengthAfterNextRatio(_startingCurve));
+		System.out.println("Starting maximum edge length double ratio: " + CurveProperties.maxEdgeLengthDoubleRatio(_startingCurve));
+		System.out.println("Starting maximum edge angle: " + CurveProperties.maxEdgeAngle(_startingCurve));
 
 		for (int i = 0; i < _iterations; i++) {
-			currentCurve = currentCurve.subdivide(_pointSelector);
+			currentCurve = currentCurve.subdivide(_pointSelector, i);
 
+			System.out.println("---------------------------------------------------------------------------------------------------");
 			System.out.println("Maximum edge length ratio after " + (i + 1) + " iterations: "
 					+ CurveProperties.maxEdgeLengthRatio(currentCurve));
+			System.out.println("Maximum edge length after next ratio after " + (i + 1) + " iterations: "
+					+ CurveProperties.maxEdgeLengthAfterNextRatio(currentCurve));
+			System.out.println("Maximum edge length double ratio after " + (i + 1) + " iterations: "
+					+ CurveProperties.maxEdgeLengthDoubleRatio(currentCurve));
+			System.out.println("Maximum edge angle after " + (i + 1) + " iterations: "
+					+ CurveProperties.maxEdgeAngle(currentCurve));
 
 			if (currentCurve instanceof TangentCurve) {
 				System.out.println("Minimum angle fraction after " + (i + 1) + " iterations: "

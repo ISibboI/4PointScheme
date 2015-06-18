@@ -4,7 +4,6 @@ import geometry.Point;
 
 
 public class DefaultTangentChooser implements TangentChooser {
-
 	@Override
 	public Line chooseTangent(Point a, Point b, Point c) {
 		Point ac = c.sub(a);
@@ -21,4 +20,8 @@ public class DefaultTangentChooser implements TangentChooser {
 		return new Line(b, a).orthogonal();
 	}
 
+	@Override
+	public void setStep(int step) {
+		// Ignore
+	}
 }
