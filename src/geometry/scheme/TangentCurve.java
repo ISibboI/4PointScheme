@@ -185,4 +185,11 @@ public class TangentCurve extends DefaultCurve {
 
 		return minAngleFraction;
 	}
+	
+	@Override
+	public void printProperties() {
+		super.printProperties();
+		
+		System.out.println("Displacement: " + _displacementParameter);
+	}
 }

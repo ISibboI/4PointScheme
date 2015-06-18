@@ -19,6 +19,10 @@ public class DefaultFourPointScheme implements FourPointScheme {
 	public void evaluate() {
 		Curve currentCurve = _startingCurve;
 
+		System.out.println("\n===================================================================================================\n");
+		_startingCurve.printProperties();
+		System.out.println();
+		
 		System.out.println("Starting maximum edge length ratio: " + CurveProperties.maxEdgeLengthRatio(_startingCurve));
 		System.out.println("Starting maximum edge length after next ratio: " + CurveProperties.maxEdgeLengthAfterNextRatio(_startingCurve));
 		System.out.println("Starting maximum edge length double ratio: " + CurveProperties.maxEdgeLengthDoubleRatio(_startingCurve));

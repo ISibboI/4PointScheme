@@ -104,4 +104,9 @@ public class DefaultCurve extends AbstractCurve {
 	public double getTensionParameter() {
 		return _tensionParameter;
 	}
+
+	@Override
+	public void printProperties() {
+		System.out.println("Tension: " + _tensionParameter);
+	}
 }
