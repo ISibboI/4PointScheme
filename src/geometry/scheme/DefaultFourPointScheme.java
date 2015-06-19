@@ -8,11 +8,13 @@ public class DefaultFourPointScheme implements FourPointScheme {
 	private Curve _resultCurve;
 	private final int _iterations;
 	private final PointSelector _pointSelector;
+	private final SubdivisionStrategy _subdivisionStrategy;
 
-	public DefaultFourPointScheme(final Curve startingPoints, final int iterations, final PointSelector pointSelector) {
+	public DefaultFourPointScheme(final Curve startingPoints, final int iterations, final PointSelector pointSelector, final SubdivisionStrategy subdivisionStrategy) {
 		_startingCurve = startingPoints.clone();
 		_iterations = iterations;
 		_pointSelector = pointSelector;
+		_subdivisionStrategy = subdivisionStrategy;
 	}
 
 	@Override
@@ -29,7 +31,7 @@ public class DefaultFourPointScheme implements FourPointScheme {
 		System.out.println("Starting maximum edge angle: " + CurveProperties.maxEdgeAngle(_startingCurve));
 
 		for (int i = 0; i < _iterations; i++) {
-			currentCurve = currentCurve.subdivide(_pointSelector, i);
+			currentCurve = _subdivisionStrategy.subdivide(currentCurve, _pointSelector, i);
 
 			System.out.println("---------------------------------------------------------------------------------------------------");
 			System.out.println("Maximum edge length ratio after " + (i + 1) + " iterations: "
@@ -46,7 +48,8 @@ public class DefaultFourPointScheme implements FourPointScheme {
 						+ ((TangentCurve) currentCurve).getMinimumTangentAngleFraction());
 			}
 		}
-
+		
+		System.out.println("\n===================================================================================================\n");
 		_resultCurve = currentCurve;
 	}
 

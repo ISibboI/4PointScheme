@@ -16,6 +16,8 @@ public interface Curve extends Cloneable, Iterable<Point> {
 	void draw(Graphics2D g, double xScale, double yScale);
 	
 	Curve subdivide(PointSelector pointSelector, int step);
+	
+	Curve subdivide(PointSelector pointSelector, int step, int index);
 
 	void printProperties();
 }

@@ -100,6 +100,24 @@ public class DefaultCurve extends AbstractCurve {
 		
 		return result;
 	}
+
+	@Override
+	public Curve subdivide(PointSelector pointSelector, int step, int index) {
+		DefaultCurve result = new DefaultCurve(size() + 1, _tensionParameter);
+		
+		for (int i = 0; i <= index; i++) {
+			result.setPoint(i, getPoint(i));
+		}
+		
+		pointSelector.setIndex(index);
+		result.setPoint(index + 1, getNewPoint(pointSelector));
+		
+		for (int i = index + 2; i < result.size(); i++) {
+			result.setPoint(i, getPoint(i - 1));
+		}
+		
+		return result;
+	}
 	
 	public double getTensionParameter() {
 		return _tensionParameter;
