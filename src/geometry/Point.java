@@ -37,8 +37,16 @@ public class Point {
 		return sub(other).distanceToOrigin();
 	}
 
+	public double squaredDistanceTo(Point other) {
+		return sub(other).squaredDistanceToOrigin();
+	}
+
 	public double distanceToOrigin() {
 		return Math.sqrt(_x * _x + _y * _y);
+	}
+
+	public double squaredDistanceToOrigin() {
+		return _x * _x + _y * _y;
 	}
 
 	public String toString() {

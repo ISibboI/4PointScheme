@@ -133,6 +133,38 @@ public class TangentCurve extends DefaultCurve {
 		return result;
 	}
 
+	@Override
+	public Curve subdivide(PointSelector pointSelector, int step, int index) {
+		_tangentChooser.setStep(step);
+		TangentCurve result = new TangentCurve(size() + 1, getTensionParameter(), _displacementParameter,
+				_tangentChooser);
+
+		for (int i = 0; i <= index; i++) {
+			result.setPoint(i, getPoint(i));
+			result.setTangent(i, getTangent(i));
+		}
+
+		pointSelector.setIndex(index);
+		result.setPoint(index + 1, getNewPoint(pointSelector));
+
+		for (int i = index + 2; i < result.size(); i++) {
+			result.setPoint(i, getPoint(i - 1));
+			result.setTangent(i, getTangent(i - 1));
+		}
+
+		if (index != 0) {
+			result.chooseTangent(index);
+		}
+
+		result.chooseTangent(index + 1);
+
+		if (index < result.size() - 3) {
+			result.chooseTangent(index + 2);
+		}
+
+		return result;
+	}
+
 	/**
 	 * Calculates the angle fraction has to be limited for theorem 6.7 to work.
 	 */
@@ -185,11 +217,11 @@ public class TangentCurve extends DefaultCurve {
 
 		return minAngleFraction;
 	}
-	
+
 	@Override
 	public void printProperties() {
 		super.printProperties();
-		
+
 		System.out.println("Displacement: " + _displacementParameter);
 	}
 }

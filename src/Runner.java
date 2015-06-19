@@ -1,10 +1,10 @@
 import geometry.Curve;
 import geometry.Point;
-import geometry.scheme.AllAtOnceSubdivisionStrategy;
 import geometry.scheme.CornerCreatingTangentChooser;
 import geometry.scheme.DefaultFourPointScheme;
 import geometry.scheme.DefaultPointSelector;
 import geometry.scheme.FourPointScheme;
+import geometry.scheme.LongestFirstSubdivisionStrategy;
 import geometry.scheme.TangentCurve;
 
 import java.awt.Color;
@@ -31,7 +31,7 @@ public class Runner {
 			startingPoints = new TangentCurve(new Point[] { new Point(0, 0), new Point(100, 0), new Point(100, 10),
 					new Point(99, 10), new Point(99, 0) }, tension, 0.9, new CornerCreatingTangentChooser());
 
-			scheme = new DefaultFourPointScheme(startingPoints, ITERATIONS, new DefaultPointSelector(), new AllAtOnceSubdivisionStrategy());
+			scheme = new DefaultFourPointScheme(startingPoints, ITERATIONS, new DefaultPointSelector(), new LongestFirstSubdivisionStrategy());
 
 			System.out.println("Evaluating...");
 			scheme.evaluate();
