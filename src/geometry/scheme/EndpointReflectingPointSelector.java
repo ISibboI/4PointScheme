@@ -3,6 +3,7 @@ package geometry.scheme;
 import geometry.Curve;
 import geometry.Line;
 import geometry.Point;
+import geometry.PointSelector;
 
 public class EndpointReflectingPointSelector implements PointSelector {
 	private int _index = -1;

@@ -3,6 +3,7 @@ package geometry.scheme;
 import geometry.Curve;
 import geometry.Line;
 import geometry.Point;
+import geometry.PointSelector;
 
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;

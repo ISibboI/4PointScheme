@@ -1,7 +1,5 @@
 package geometry;
 
-import geometry.scheme.PointSelector;
-
 import java.awt.Graphics2D;
 
 public interface Curve extends Cloneable, Iterable<Point> {

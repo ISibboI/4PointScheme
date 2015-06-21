@@ -1,6 +1,7 @@
 package geometry.scheme;
 import geometry.Curve;
 import geometry.Point;
+import geometry.PointSelector;
 
 
 public class DefaultPointSelector implements PointSelector {

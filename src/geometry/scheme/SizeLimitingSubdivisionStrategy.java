@@ -1,6 +1,7 @@
 package geometry.scheme;
 
 import geometry.Curve;
+import geometry.PointSelector;
 
 public class SizeLimitingSubdivisionStrategy implements SubdivisionStrategy {
 	private final SubdivisionStrategy _decorated;

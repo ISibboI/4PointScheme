@@ -1,6 +1,7 @@
 package geometry.scheme;
 
 import geometry.Curve;
+import geometry.PointSelector;
 
 public interface SubdivisionStrategy {
 

@@ -2,6 +2,7 @@ package geometry.scheme;
 
 import geometry.Curve;
 import geometry.CurveProperties;
+import geometry.PointSelector;
 
 public class DefaultFourPointScheme implements FourPointScheme {
 	private final Curve _startingCurve;
