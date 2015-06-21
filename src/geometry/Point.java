@@ -64,4 +64,19 @@ public class Point {
 	public double scalarProduct(Point other) {
 		return _x * other._x + _y * other._y;
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof Point) {
+			Point p = (Point)o;
+			
+			return p._x == _x && p._y == _y;
+		} else {
+			return false;
+		}
+	}
+	
+	public int hashCode() {
+		return Double.hashCode(_x) ^ ~Double.hashCode(_y);
+	}
 }

@@ -5,6 +5,7 @@ import geometry.scheme.CornerCreatingTangentChooser;
 import geometry.scheme.DefaultFourPointScheme;
 import geometry.scheme.DefaultPointSelector;
 import geometry.scheme.DefaultTangentChooser;
+import geometry.scheme.EndpointReflectingPointSelector;
 import geometry.scheme.FourPointScheme;
 import geometry.scheme.LongestFirstSubdivisionStrategy;
 import geometry.scheme.SizeLimitingSubdivisionStrategy;
@@ -14,6 +15,7 @@ import java.awt.Color;
 
 import ui.CurveVisualizer;
 
+@SuppressWarnings("unused")
 public class Runner {
 	private static final int ITERATIONS = 900;
 	private static final int MAX_DRAWING_POINTS = 1000;
@@ -54,7 +56,7 @@ public class Runner {
 //				new LongestFirstSubdivisionStrategy());
 //		scheme = new DefaultFourPointScheme(startingPoints, 7, new DefaultPointSelector(),
 //				new AllAtOnceSubdivisionStrategy());
-		scheme = new DefaultFourPointScheme(startingPoints, 30, new DefaultPointSelector(),
+		scheme = new DefaultFourPointScheme(startingPoints, 3, new EndpointReflectingPointSelector(),
 				new SizeLimitingSubdivisionStrategy(new AllAtOnceSubdivisionStrategy(), 128));
 
 		System.out.println("Evaluating...");
