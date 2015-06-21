@@ -49,4 +49,8 @@ public class Line {
 	public Point getDirection() {
 		return _end.sub(_start);
 	}
+
+	public double length() {
+		return getDirection().distanceToOrigin();
+	}
 }
