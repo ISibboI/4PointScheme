@@ -21,6 +21,10 @@ public class Point {
 		return new Point(_x * d, _y * d);
 	}
 
+	public Point div(double d) {
+		return new Point(_x / d, _y / d);
+	}
+
 	public double getX() {
 		return _x;
 	}

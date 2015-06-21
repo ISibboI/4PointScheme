@@ -162,7 +162,8 @@ public class TangentCurve extends DefaultCurve {
 	}
 
 	/**
-	 * Calculates the angle fraction that has to be limited for theorem 6.7 to work.
+	 * Calculates the angle fraction that has to be limited for theorem 6.7 to
+	 * work.
 	 */
 	public double getMinimumTangentAngleFraction() {
 		double minAngleFraction = Double.POSITIVE_INFINITY;
@@ -220,29 +221,43 @@ public class TangentCurve extends DefaultCurve {
 
 		System.out.println("Displacement: " + _displacementParameter);
 	}
-	
+
 	@Override
 	public void draw(Graphics2D g, double xScale, double yScale) {
 		super.draw(g, xScale, yScale);
-		
+
 		Point scale = new Point(xScale, yScale);
 		Path2D.Double path = new Path2D.Double();
 		final double length = 10;
-		
+
 		for (int i = 0; i < size(); i++) {
 			Line tangent = getTangent(i);
-			Point start = tangent.getStart().mul(scale).sub(tangent.getDirection().mul(scale).mul(length / tangent.length()));
-			Point end = tangent.getStart().mul(scale).add(tangent.getDirection().mul(scale).mul(length / tangent.length()));
-			
+			Point start = tangent.getStart().mul(scale)
+					.sub(tangent.getDirection().mul(scale).mul(length / tangent.length()));
+			Point end = tangent.getStart().mul(scale)
+					.add(tangent.getDirection().mul(scale).mul(length / tangent.length()));
+
 			path.moveTo(start.getX(), start.getY());
 			path.lineTo(end.getX(), end.getY());
 		}
-		
+
 		final Stroke stroke = g.getStroke();
-		
+
 		g.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 		g.draw(path);
-		
+
 		g.setStroke(stroke);
+	}
+
+	@Override
+	public Curve createSubcurve(int offset, int length) {
+		TangentCurve subcurve = new TangentCurve(length, getTensionParameter(), _displacementParameter, _tangentChooser);
+
+		for (int i = 0; i < length; i++) {
+			subcurve.setPoint(i, getPoint(i + offset));
+			subcurve.setTangent(i, getTangent(i + offset));
+		}
+
+		return subcurve;
 	}
 }

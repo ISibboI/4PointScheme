@@ -53,4 +53,15 @@ public class Line {
 	public double length() {
 		return getDirection().distanceToOrigin();
 	}
+
+	/**
+	 * Uses this line as a mirror to reflect vectors.
+	 * If the vector is orthogonal to this line, it is returned without changes except for numerical errors.
+	 */
+	public Point reflect(final Point vector) {
+		Point normal = getDirection().orthogonal();
+		normal.div(normal.distanceToOrigin());
+		
+		return normal.mul(vector.scalarProduct(normal)).mul(2).sub(vector);
+	}
 }

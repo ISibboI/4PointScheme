@@ -20,4 +20,6 @@ public interface Curve extends Cloneable, Iterable<Point> {
 	Curve subdivide(PointSelector pointSelector, int step, int index);
 
 	void printProperties();
+	
+	Curve createSubcurve(int offset, int length);
 }
