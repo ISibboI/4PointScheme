@@ -8,6 +8,7 @@ import geometry.scheme.DefaultTangentChooser;
 import geometry.scheme.EndpointReflectingPointSelector;
 import geometry.scheme.FourPointScheme;
 import geometry.scheme.LongestFirstSubdivisionStrategy;
+import geometry.scheme.SelectableEndTangentChooser;
 import geometry.scheme.SizeLimitingSubdivisionStrategy;
 import geometry.scheme.TangentCurve;
 
@@ -50,14 +51,14 @@ public class Runner {
 		// System.out.println("Evaluation complete.");
 		// }
 
-		startingPoints = new TangentCurve(STARTING_POINTS[1], 1.0 / 16.0, 0.9, new DefaultTangentChooser());
+		startingPoints = new TangentCurve(STARTING_POINTS[1], 1.0 / 16.0, 0.9, new SelectableEndTangentChooser(new Point(10, 1), new Point(1, 1)));
 
 //		scheme = new DefaultFourPointScheme(startingPoints, ITERATIONS, new DefaultPointSelector(),
 //				new LongestFirstSubdivisionStrategy());
 //		scheme = new DefaultFourPointScheme(startingPoints, 7, new DefaultPointSelector(),
 //				new AllAtOnceSubdivisionStrategy());
-		scheme = new DefaultFourPointScheme(startingPoints, 3, new EndpointReflectingPointSelector(),
-				new SizeLimitingSubdivisionStrategy(new AllAtOnceSubdivisionStrategy(), 128));
+		scheme = new DefaultFourPointScheme(startingPoints, 7, new DefaultPointSelector(),
+				new SizeLimitingSubdivisionStrategy(new AllAtOnceSubdivisionStrategy(), 900));
 
 		System.out.println("Evaluating...");
 		scheme.evaluate();
@@ -68,7 +69,7 @@ public class Runner {
 
 			if (scheme.getResult().size() <= MAX_DRAWING_POINTS) {
 				System.out.println("Drawing curve...");
-				visualizer.drawCurve(scheme.getResult(), Color.BLACK);
+				visualizer.drawCurves(startingPoints, scheme.getResult(), Color.BLACK);
 				System.out.println("Curve drawn.");
 			} else {
 				visualizer.dispose();
