@@ -171,4 +171,26 @@ public final class CurveProperties {
 
 		return -1;
 	}
+	
+	public static double maxAngleRatio(final Curve curve) {
+		double lastAngle = getAngle(curve, 1);
+		double maxRatio = 1;
+		
+		for (int i = 2; i < curve.size() - 1; i++) {
+			double currentAngle = getAngle(curve, i);
+			double ratio = currentAngle / lastAngle;
+			
+			if (ratio < 1) {
+				ratio = 1 / ratio;
+			}
+			
+			if (ratio > maxRatio) {
+				maxRatio = ratio;
+			}
+			
+			lastAngle = currentAngle;
+		}
+		
+		return maxRatio;
+	}
 }

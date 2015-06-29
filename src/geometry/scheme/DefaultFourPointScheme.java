@@ -31,6 +31,7 @@ public class DefaultFourPointScheme implements FourPointScheme {
 		System.out.println("Starting maximum edge length double ratio: "
 				+ CurveProperties.maxEdgeLengthDoubleRatio(_startingCurve));
 		System.out.println("Starting maximum edge angle: " + CurveProperties.maxEdgeAngle(_startingCurve));
+		System.out.println("Starting maximum angle ratio: " + CurveProperties.maxAngleRatio(_startingCurve));
 		System.out.println("The starting curve is " + (CurveProperties.isConvex(_startingCurve) ? "" : "NOT ") + "convex.");
 	}
 
@@ -45,6 +46,7 @@ public class DefaultFourPointScheme implements FourPointScheme {
 				+ CurveProperties.maxEdgeLengthDoubleRatio(currentCurve));
 		System.out.println("Maximum edge angle after " + (iterations) + " iterations: "
 				+ CurveProperties.maxEdgeAngle(currentCurve));
+		System.out.println("Maximum angle ratio after " + iterations + " iterations: " + CurveProperties.maxAngleRatio(currentCurve));
 
 		if (currentCurve instanceof TangentCurve) {
 			System.out.println("Minimum angle fraction after " + (iterations) + " iterations: "

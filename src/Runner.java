@@ -51,14 +51,14 @@ public class Runner {
 		// System.out.println("Evaluation complete.");
 		// }
 
-		startingPoints = new TangentCurve(STARTING_POINTS[1], 1.0 / 16.0, 0.9, new SelectableEndTangentChooser(new Point(10, 1), new Point(1, 1)));
+		startingPoints = new TangentCurve(STARTING_POINTS[0], 1.0 / 16.0, 0.9, new SelectableEndTangentChooser(new Point(10, 1), new Point(1, 1)));
 
 //		scheme = new DefaultFourPointScheme(startingPoints, ITERATIONS, new DefaultPointSelector(),
 //				new LongestFirstSubdivisionStrategy());
+		scheme = new DefaultFourPointScheme(startingPoints, 20, new DefaultPointSelector(),
+				new AllAtOnceSubdivisionStrategy());
 //		scheme = new DefaultFourPointScheme(startingPoints, 7, new DefaultPointSelector(),
-//				new AllAtOnceSubdivisionStrategy());
-		scheme = new DefaultFourPointScheme(startingPoints, 7, new DefaultPointSelector(),
-				new SizeLimitingSubdivisionStrategy(new AllAtOnceSubdivisionStrategy(), 900));
+//				new SizeLimitingSubdivisionStrategy(new AllAtOnceSubdivisionStrategy(), 900));
 
 		System.out.println("Evaluating...");
 		scheme.evaluate();
