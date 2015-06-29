@@ -19,12 +19,12 @@ public class SelectableEndTangentChooser implements TangentChooser {
 	}
 
 	@Override
-	public Line chooseFirstTangent(Point b, Point c) {
+	public Line chooseFirstTangent(Point a, Point b, Point c) {
 		return new Line(b, b.add(_startDirection)).orthogonal();
 	}
 
 	@Override
-	public Line chooseLastTangent(Point a, Point b) {
+	public Line chooseLastTangent(Point a, Point b, Point c) {
 		return new Line(b, b.add(_endDirection)).orthogonal();
 	}
 

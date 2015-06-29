@@ -55,16 +55,16 @@ public class TangentCurve extends DefaultCurve {
 		chooseAllTangents();
 	}
 
-	private void chooseAllTangents() {
-		_tangents[0] = _tangentChooser.chooseFirstTangent(getPoint(0), getPoint(1));
-		_tangents[size() - 1] = _tangentChooser.chooseLastTangent(getPoint(size() - 2), getPoint(size() - 1));
+	protected void chooseAllTangents() {
+		_tangents[0] = _tangentChooser.chooseFirstTangent(getPoint(size() - 2), getPoint(0), getPoint(1));
+		_tangents[size() - 1] = _tangentChooser.chooseLastTangent(getPoint(size() - 2), getPoint(size() - 1), getPoint(1));
 
 		for (int i = 1; i < _tangents.length - 1; i++) {
 			chooseTangent(i);
 		}
 	}
 
-	private void chooseTangent(int i) {
+	protected void chooseTangent(int i) {
 		_tangents[i] = _tangentChooser.chooseTangent(getPoint(i - 1), getPoint(i), getPoint(i + 1));
 	}
 
@@ -77,11 +77,11 @@ public class TangentCurve extends DefaultCurve {
 		return _tangents[i];
 	}
 
-	private void setTangent(int i, Line tangent) {
+	protected void setTangent(int i, Line tangent) {
 		_tangents[i] = tangent;
 	}
 
-	private Point getNewPoint(PointSelector selector) {
+	protected Point getNewPoint(PointSelector selector) {
 		Point a = selector.getA(this);
 		Point b = selector.getB(this);
 		Point c = selector.getC(this);
@@ -121,8 +121,7 @@ public class TangentCurve extends DefaultCurve {
 	@Override
 	public Curve subdivide(PointSelector pointSelector, int step) {
 		_tangentChooser.setStep(step);
-		TangentCurve result = new TangentCurve(size() * 2 - 1, getTensionParameter(), _displacementParameter,
-				_tangentChooser);
+		TangentCurve result = doubleSize();
 
 		copyPointsToSubdivided(result);
 
@@ -141,8 +140,7 @@ public class TangentCurve extends DefaultCurve {
 	@Override
 	public Curve subdivide(final PointSelector pointSelector, final int step, final int index) {
 		_tangentChooser.setStep(step);
-		TangentCurve result = new TangentCurve(size() + 1, getTensionParameter(), _displacementParameter,
-				_tangentChooser);
+		TangentCurve result = incrementSize();
 
 		for (int i = 0; i <= index; i++) {
 			result.setPoint(i, getPoint(i));
@@ -245,7 +243,7 @@ public class TangentCurve extends DefaultCurve {
 		final Stroke stroke = g.getStroke();
 
 		g.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-		g.draw(path);
+//		g.draw(path);
 
 		g.setStroke(stroke);
 	}
@@ -260,5 +258,21 @@ public class TangentCurve extends DefaultCurve {
 		}
 
 		return subcurve;
+	}
+
+	protected TangentCurve doubleSize() {
+		return new TangentCurve(size() * 2 - 1, getTensionParameter(), _displacementParameter, _tangentChooser);
+	}
+
+	protected TangentCurve incrementSize() {
+		return new TangentCurve(size() + 1, getTensionParameter(), _displacementParameter, _tangentChooser);
+	}
+	
+	public double getDisplacementParameter() {
+		return _displacementParameter;
+	}
+	
+	public TangentChooser getTangentChooser() {
+		return _tangentChooser;
 	}
 }
