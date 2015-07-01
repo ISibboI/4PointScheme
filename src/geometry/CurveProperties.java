@@ -141,6 +141,10 @@ public final class CurveProperties {
 			angle += 2 * Math.PI;
 		}
 		
+		if (angle > Math.PI) {
+			angle -= 2 * Math.PI;
+		}
+		
 		if (angle > Math.PI || angle < -Math.PI) {
 			throw new RuntimeException("Calculated wrong angle: " + angle);
 		}

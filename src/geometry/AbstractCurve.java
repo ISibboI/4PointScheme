@@ -1,5 +1,7 @@
 package geometry;
 
+import geometry.scheme.TangentCurve;
+
 import java.awt.Graphics2D;
 import java.awt.geom.Path2D;
 import java.util.Iterator;
@@ -28,7 +30,7 @@ public abstract class AbstractCurve implements Curve {
 		// Draw unconvexity
 		int unconvexity = CurveProperties.getUnconvexity(this);
 
-		if (unconvexity != -1) {
+		if (unconvexity != -1 && this instanceof TangentCurve) {
 			Point p = getPoint(unconvexity).mul(scale);
 			g.drawOval((int) (p.getX() - 5), (int) (p.getY() - 5), 10, 10);
 

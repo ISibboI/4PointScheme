@@ -15,8 +15,8 @@ public class CurveVisualizer {
 	private final int _height;
 
 	public CurveVisualizer() {
-		_width = 1000;
-		_height = 1000;
+		_width = 700;
+		_height = 700;
 		_drawFrame = new DrawFrame("4 Point Scheme", _width, _height, 400, 100, 1);
 		_drawFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}

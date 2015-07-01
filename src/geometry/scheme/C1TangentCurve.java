@@ -48,8 +48,8 @@ public class C1TangentCurve extends TangentCurve {
 		
 		bc = bc.normalize();
 		cb = cb.normalize();
-		bs = bs.normalize();
-		cs = cs.normalize();
+		bs = bs.normalize().mul(getDisplacementParameter());
+		cs = cs.normalize().mul(getDisplacementParameter());
 		
 		Line lb = new Line(b, b.add(bs).add(bc));
 		Line lc = new Line(c, c.add(cs).add(cb));

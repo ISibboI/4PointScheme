@@ -73,7 +73,7 @@ public class DefaultFourPointScheme implements FourPointScheme {
 			
 			printDuringEvaluation(currentCurve, i+1);
 			
-			if (!CurveProperties.isConvex(currentCurve)) {
+			if (!CurveProperties.isConvex(currentCurve) && currentCurve instanceof TangentCurve) {
 				System.out.println("The generated curve is NOT convex anymore!");
 				System.out.println("Unconvexity with angle: " + CurveProperties.getAngle(currentCurve, CurveProperties.getUnconvexity(currentCurve), true));
 				break;
