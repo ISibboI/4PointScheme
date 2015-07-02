@@ -271,7 +271,7 @@ public class TangentCurve extends DefaultCurve {
 
 		g.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_ROUND,
 				BasicStroke.JOIN_ROUND));
-//		g.draw(path);
+		g.draw(path);
 
 		g.setStroke(stroke);
 	}

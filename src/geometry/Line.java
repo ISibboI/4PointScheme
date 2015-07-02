@@ -64,4 +64,8 @@ public class Line {
 		
 		return normal.mul(vector.scalarProduct(normal)).mul(2).sub(vector);
 	}
+
+	public Line translate(final Point translation) {
+		return new Line(_start.add(translation), _end.add(translation));
+	}
 }

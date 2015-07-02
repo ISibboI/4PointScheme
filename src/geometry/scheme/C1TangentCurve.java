@@ -36,13 +36,13 @@ public class C1TangentCurve extends TangentCurve {
 		
 		Point bs = tb.getDirection();
 		
-		if (bs.scalarProduct(bc) < 0.00001) {
+		if (bs.scalarProduct(bc) < 0) {
 			bs = bs.mul(-1);
 		}
 		
 		Point cs = tc.getDirection();
 		
-		if (cs.scalarProduct(cb) < 0.00001) {
+		if (cs.scalarProduct(cb) < 0) {
 			cs = cs.mul(-1);
 		}
 		
