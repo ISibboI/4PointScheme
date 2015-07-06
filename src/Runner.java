@@ -1,22 +1,25 @@
 import geometry.Curve;
+import geometry.CurveProperties;
 import geometry.Point;
-import geometry.scheme.AllAtOnceSubdivisionStrategy;
-import geometry.scheme.C1TangentCurve;
 import geometry.scheme.ClosedAngleHalfingTangentChooser;
-import geometry.scheme.ClosedPointSelector;
 import geometry.scheme.ClosedTangentChooser;
 import geometry.scheme.CornerCreatingTangentChooser;
 import geometry.scheme.DefaultCurve;
-import geometry.scheme.DefaultFourPointScheme;
-import geometry.scheme.DefaultPointSelector;
 import geometry.scheme.DefaultTangentChooser;
-import geometry.scheme.DualCurve;
-import geometry.scheme.EndpointReflectingPointSelector;
-import geometry.scheme.FourPointScheme;
-import geometry.scheme.LongestFirstSubdivisionStrategy;
 import geometry.scheme.SelectableEndTangentChooser;
-import geometry.scheme.SizeLimitingSubdivisionStrategy;
-import geometry.scheme.TangentCurve;
+import geometry.scheme.SubdivisionScheme;
+import geometry.scheme.chaikin.ChaikinScheme;
+import geometry.scheme.fourpoint.AllAtOnceSubdivisionStrategy;
+import geometry.scheme.fourpoint.C1TangentCurve;
+import geometry.scheme.fourpoint.ClosedPointSelector;
+import geometry.scheme.fourpoint.FourPointCurve;
+import geometry.scheme.fourpoint.DefaultFourPointScheme;
+import geometry.scheme.fourpoint.DefaultPointSelector;
+import geometry.scheme.fourpoint.EndpointReflectingPointSelector;
+import geometry.scheme.fourpoint.FourPointScheme;
+import geometry.scheme.fourpoint.LongestFirstSubdivisionStrategy;
+import geometry.scheme.fourpoint.SizeLimitingSubdivisionStrategy;
+import geometry.scheme.fourpoint.TangentCurve;
 
 import java.awt.Color;
 
@@ -28,6 +31,10 @@ public class Runner {
 	private static final int MAX_DRAWING_POINTS = 1000;
 	private static final boolean DRAW_POINTS = true;
 	private static final boolean DRAW_DUALIZED = false;
+	private static final int STARTING_POINTS_INDEX = 1;
+
+	private static final int CHAIKIN_ITERATIONS = 2;
+
 	private static final double[] TENSION_VALUES = new double[] { 1.0 / 2.0,
 			1.0 / 4.0, 1.0 / 7.0, 1.0 / 8.0, 1.0 / 10.0, 1.0 / 12.0,
 			1.0 / 16.0, 1.0 / 32.0, 1.0 / 64.0, 1.0 / 128.0 };
@@ -42,12 +49,51 @@ public class Runner {
 
 	public static void main(String[] args) throws InterruptedException {
 		CurveVisualizer visualizer = null;
-		Curve startingPoints = null;
-		FourPointScheme scheme = null;
 
 		if (DRAW_POINTS) {
 			visualizer = new CurveVisualizer();
 		}
+
+		if (DRAW_POINTS) {
+			Thread.sleep(1000);
+
+			System.out.println("Evaluating...");
+			Curve result = evaluateChaikin();
+			System.out.println("Evaluation complete.");
+
+			if (result.size() <= MAX_DRAWING_POINTS) {
+				if (DRAW_DUALIZED && result instanceof TangentCurve) {
+					TangentCurve tangentResult = (TangentCurve) result;
+					result = CurveProperties.dualize(tangentResult);
+				}
+
+				System.out.println("Drawing curve...");
+				visualizer.drawCurves(new DefaultCurve(
+						STARTING_POINTS[STARTING_POINTS_INDEX]), result,
+						Color.BLACK);
+				System.out.println("Curve drawn.");
+			} else {
+				visualizer.dispose();
+			}
+		}
+
+		System.out.println("Finished.");
+	}
+
+	public static Curve evaluateChaikin() {
+		DefaultCurve startingPoints = new DefaultCurve(
+				STARTING_POINTS[STARTING_POINTS_INDEX]);
+		SubdivisionScheme scheme = new ChaikinScheme(startingPoints,
+				CHAIKIN_ITERATIONS, true);
+		
+		scheme.evaluate();
+		
+		return scheme.getResult();
+	}
+
+	public static Curve evaluateFourPointScheme() {
+		FourPointScheme scheme = null;
+		FourPointCurve startingPoints = null;
 
 		// for (double tension : TENSION_VALUES) {
 		// startingPoints = new TangentCurve(new Point[] { new Point(0, 0), new
@@ -63,7 +109,8 @@ public class Runner {
 		// System.out.println("Evaluation complete.");
 		// }
 
-		startingPoints = new C1TangentCurve(STARTING_POINTS[1], 1.0 / 16.0, 1,
+		startingPoints = new C1TangentCurve(
+				STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0, 1,
 				new SelectableEndTangentChooser(new Point(10, 1), new Point(1,
 						1)));
 		// startingPoints = new TangentCurve(STARTING_POINTS[2], 1.0 / 16.0,
@@ -81,30 +128,8 @@ public class Runner {
 		// new SizeLimitingSubdivisionStrategy(new
 		// AllAtOnceSubdivisionStrategy(), 900));
 
-		System.out.println("Evaluating...");
 		scheme.evaluate();
-		System.out.println("Evaluation complete.");
 
-		if (DRAW_POINTS) {
-			Thread.sleep(1000);
-
-			Curve result = scheme.getResult();
-
-			if (scheme.getResult().size() <= MAX_DRAWING_POINTS) {
-				if (DRAW_DUALIZED && result instanceof TangentCurve) {
-					TangentCurve tangentResult = (TangentCurve) scheme
-							.getResult();
-					result = new DualCurve(tangentResult);
-				}
-
-				System.out.println("Drawing curve...");
-				visualizer.drawCurves(startingPoints, result, Color.BLACK);
-				System.out.println("Curve drawn.");
-			} else {
-				visualizer.dispose();
-			}
-		}
-
-		System.out.println("Finished.");
+		return scheme.getResult();
 	}
 }

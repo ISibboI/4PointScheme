@@ -2,8 +2,8 @@ package geometry;
 
 import static org.junit.Assert.*;
 import geometry.scheme.DefaultTangentChooser;
-import geometry.scheme.EndpointReflectingPointSelector;
-import geometry.scheme.TangentCurve;
+import geometry.scheme.fourpoint.EndpointReflectingPointSelector;
+import geometry.scheme.fourpoint.TangentCurve;
 
 import org.junit.Before;
 import org.junit.Test;

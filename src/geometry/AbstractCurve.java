@@ -1,6 +1,6 @@
 package geometry;
 
-import geometry.scheme.TangentCurve;
+import geometry.scheme.fourpoint.TangentCurve;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Path2D;
