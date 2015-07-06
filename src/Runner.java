@@ -63,11 +63,13 @@ public class Runner {
 		// System.out.println("Evaluation complete.");
 		// }
 
-		 startingPoints = new C1TangentCurve(STARTING_POINTS[1], 1.0 / 16.0,
-		 1, new SelectableEndTangentChooser(new Point(10, 1), new Point(1, 1)));
-//		startingPoints = new TangentCurve(STARTING_POINTS[2], 1.0 / 16.0, 0.9,
-//				new ClosedAngleHalfingTangentChooser());
-//		startingPoints = new DefaultCurve(STARTING_POINTS[2], 1.0 / 16.0);
+		startingPoints = new C1TangentCurve(STARTING_POINTS[1], 1.0 / 16.0, 1,
+				new SelectableEndTangentChooser(new Point(10, 1), new Point(1,
+						1)));
+		// startingPoints = new TangentCurve(STARTING_POINTS[2], 1.0 / 16.0,
+		// 0.9,
+		// new ClosedAngleHalfingTangentChooser());
+		// startingPoints = new DefaultCurve(STARTING_POINTS[2], 1.0 / 16.0);
 
 		// scheme = new DefaultFourPointScheme(startingPoints, ITERATIONS, new
 		// DefaultPointSelector(),
@@ -85,18 +87,18 @@ public class Runner {
 
 		if (DRAW_POINTS) {
 			Thread.sleep(1000);
-			
+
 			Curve result = scheme.getResult();
-			
+
 			if (scheme.getResult().size() <= MAX_DRAWING_POINTS) {
 				if (DRAW_DUALIZED && result instanceof TangentCurve) {
-					TangentCurve tangentResult = (TangentCurve) scheme.getResult();
+					TangentCurve tangentResult = (TangentCurve) scheme
+							.getResult();
 					result = new DualCurve(tangentResult);
 				}
-				
+
 				System.out.println("Drawing curve...");
-				visualizer.drawCurves(startingPoints, result,
-						Color.BLACK);
+				visualizer.drawCurves(startingPoints, result, Color.BLACK);
 				System.out.println("Curve drawn.");
 			} else {
 				visualizer.dispose();

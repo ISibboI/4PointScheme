@@ -8,7 +8,6 @@ import geometry.scheme.TangentCurve;
 import org.junit.Before;
 import org.junit.Test;
 
-@SuppressWarnings("unused")
 public class TestReflection {
 	private Curve _curve;
 
