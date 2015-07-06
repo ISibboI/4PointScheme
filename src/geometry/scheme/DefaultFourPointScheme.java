@@ -2,6 +2,7 @@ package geometry.scheme;
 
 import geometry.Curve;
 import geometry.CurveProperties;
+import geometry.PointSelector;
 
 public class DefaultFourPointScheme implements FourPointScheme {
 	private final Curve _startingCurve;
@@ -30,6 +31,7 @@ public class DefaultFourPointScheme implements FourPointScheme {
 		System.out.println("Starting maximum edge length double ratio: "
 				+ CurveProperties.maxEdgeLengthDoubleRatio(_startingCurve));
 		System.out.println("Starting maximum edge angle: " + CurveProperties.maxEdgeAngle(_startingCurve));
+		System.out.println("Starting maximum angle ratio: " + CurveProperties.maxAngleRatio(_startingCurve));
 		System.out.println("The starting curve is " + (CurveProperties.isConvex(_startingCurve) ? "" : "NOT ") + "convex.");
 	}
 
@@ -44,6 +46,7 @@ public class DefaultFourPointScheme implements FourPointScheme {
 				+ CurveProperties.maxEdgeLengthDoubleRatio(currentCurve));
 		System.out.println("Maximum edge angle after " + (iterations) + " iterations: "
 				+ CurveProperties.maxEdgeAngle(currentCurve));
+		System.out.println("Maximum angle ratio after " + iterations + " iterations: " + CurveProperties.maxAngleRatio(currentCurve));
 
 		if (currentCurve instanceof TangentCurve) {
 			System.out.println("Minimum angle fraction after " + (iterations) + " iterations: "
@@ -70,7 +73,7 @@ public class DefaultFourPointScheme implements FourPointScheme {
 			
 			printDuringEvaluation(currentCurve, i+1);
 			
-			if (!CurveProperties.isConvex(currentCurve)) {
+			if (!CurveProperties.isConvex(currentCurve) && currentCurve instanceof TangentCurve) {
 				System.out.println("The generated curve is NOT convex anymore!");
 				System.out.println("Unconvexity with angle: " + CurveProperties.getAngle(currentCurve, CurveProperties.getUnconvexity(currentCurve), true));
 				break;

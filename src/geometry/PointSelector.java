@@ -1,7 +1,5 @@
-package geometry.scheme;
+package geometry;
 
-import geometry.Curve;
-import geometry.Point;
 
 public interface PointSelector {
 	Point getA(Curve curve);

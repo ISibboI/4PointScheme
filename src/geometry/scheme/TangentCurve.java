@@ -3,6 +3,7 @@ package geometry.scheme;
 import geometry.Curve;
 import geometry.Line;
 import geometry.Point;
+import geometry.PointSelector;
 
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
@@ -15,7 +16,8 @@ public class TangentCurve extends DefaultCurve {
 	private final double _displacementParameter;
 	private final TangentChooser _tangentChooser;
 
-	public TangentCurve(int size, final double tensionParameter, final double displacementParameter,
+	public TangentCurve(int size, final double tensionParameter,
+			final double displacementParameter,
 			final TangentChooser tangentChooser) {
 		super(size, tensionParameter);
 
@@ -24,7 +26,8 @@ public class TangentCurve extends DefaultCurve {
 		_tangentChooser = tangentChooser;
 	}
 
-	public TangentCurve(final Point[] points, final double tensionParameter, final double displacementParameter,
+	public TangentCurve(final Point[] points, final double tensionParameter,
+			final double displacementParameter,
 			final TangentChooser tangentChooser) {
 		super(points, tensionParameter);
 
@@ -38,12 +41,14 @@ public class TangentCurve extends DefaultCurve {
 	public TangentCurve(final TangentCurve tangentCurve) {
 		super(tangentCurve);
 
-		_tangents = Arrays.copyOf(tangentCurve._tangents, tangentCurve._tangents.length);
+		_tangents = Arrays.copyOf(tangentCurve._tangents,
+				tangentCurve._tangents.length);
 		_displacementParameter = tangentCurve._displacementParameter;
 		_tangentChooser = tangentCurve._tangentChooser;
 	}
 
-	public TangentCurve(DefaultCurve defaultCurve, final double displacementParameter,
+	public TangentCurve(DefaultCurve defaultCurve,
+			final double displacementParameter,
 			final TangentChooser tangentChooser) {
 		super(defaultCurve);
 
@@ -54,17 +59,26 @@ public class TangentCurve extends DefaultCurve {
 		chooseAllTangents();
 	}
 
-	private void chooseAllTangents() {
-		_tangents[0] = _tangentChooser.chooseFirstTangent(getPoint(0), getPoint(1));
-		_tangents[size() - 1] = _tangentChooser.chooseLastTangent(getPoint(size() - 2), getPoint(size() - 1));
+	protected void chooseAllTangents() {
+		_tangents[0] = _tangentChooser.chooseFirstTangent(getPoint(size() - 2),
+				getPoint(0), getPoint(1));
+		_tangents[size() - 1] = _tangentChooser.chooseLastTangent(
+				getPoint(size() - 2), getPoint(size() - 1), getPoint(1));
 
 		for (int i = 1; i < _tangents.length - 1; i++) {
 			chooseTangent(i);
 		}
 	}
 
-	private void chooseTangent(int i) {
-		_tangents[i] = _tangentChooser.chooseTangent(getPoint(i - 1), getPoint(i), getPoint(i + 1));
+	protected void chooseAllNewTangents() {
+		for (int i = 1; i < _tangents.length - 1; i += 2) {
+			chooseTangent(i);
+		}
+	}
+
+	protected void chooseTangent(int i) {
+		_tangents[i] = _tangentChooser.chooseTangent(getPoint(i - 1),
+				getPoint(i), getPoint(i + 1));
 	}
 
 	@Override
@@ -76,11 +90,11 @@ public class TangentCurve extends DefaultCurve {
 		return _tangents[i];
 	}
 
-	private void setTangent(int i, Line tangent) {
+	protected void setTangent(int i, Line tangent) {
 		_tangents[i] = tangent;
 	}
 
-	private Point getNewPoint(PointSelector selector) {
+	protected Point getNewPoint(PointSelector selector) {
 		Point a = selector.getA(this);
 		Point b = selector.getB(this);
 		Point c = selector.getC(this);
@@ -107,12 +121,14 @@ public class TangentCurve extends DefaultCurve {
 		}
 
 		if (!Double.isFinite(tbCutDistance) || !Double.isFinite(tcCutDistance)) {
-			throw new RuntimeException("Error cutting lines: " + tbCutDistance + ", " + tcCutDistance);
+			throw new RuntimeException("Error cutting lines: " + tbCutDistance
+					+ ", " + tcCutDistance);
 		}
 
 		double minCutDistance = Math.min(tbCutDistance, tcCutDistance);
 		double displacementSize = _displacementParameter * minCutDistance;
-		double convergingDisplacementSize = Math.min(getTensionParameter(), displacementSize);
+		double convergingDisplacementSize = Math.min(getTensionParameter(),
+				displacementSize);
 
 		return center.add(displacementVector.mul(convergingDisplacementSize));
 	}
@@ -120,8 +136,7 @@ public class TangentCurve extends DefaultCurve {
 	@Override
 	public Curve subdivide(PointSelector pointSelector, int step) {
 		_tangentChooser.setStep(step);
-		TangentCurve result = new TangentCurve(size() * 2 - 1, getTensionParameter(), _displacementParameter,
-				_tangentChooser);
+		TangentCurve result = doubleSize();
 
 		copyPointsToSubdivided(result);
 
@@ -130,7 +145,11 @@ public class TangentCurve extends DefaultCurve {
 			result.setPoint(i, getNewPoint(pointSelector));
 		}
 
-		result.chooseAllTangents();
+		for (int i = 0; i < result.size(); i += 2) {
+			result.setTangent(i, getTangent(i / 2));
+		}
+
+		result.chooseAllNewTangents();
 		result.setTangent(0, getTangent(0));
 		result.setTangent(result.size() - 1, getTangent(size() - 1));
 
@@ -138,10 +157,10 @@ public class TangentCurve extends DefaultCurve {
 	}
 
 	@Override
-	public Curve subdivide(final PointSelector pointSelector, final int step, final int index) {
+	public Curve subdivide(final PointSelector pointSelector, final int step,
+			final int index) {
 		_tangentChooser.setStep(step);
-		TangentCurve result = new TangentCurve(size() + 1, getTensionParameter(), _displacementParameter,
-				_tangentChooser);
+		TangentCurve result = incrementSize();
 
 		for (int i = 0; i <= index; i++) {
 			result.setPoint(i, getPoint(i));
@@ -162,7 +181,8 @@ public class TangentCurve extends DefaultCurve {
 	}
 
 	/**
-	 * Calculates the angle fraction that has to be limited for theorem 6.7 to work.
+	 * Calculates the angle fraction that has to be limited for theorem 6.7 to
+	 * work.
 	 */
 	public double getMinimumTangentAngleFraction() {
 		double minAngleFraction = Double.POSITIVE_INFINITY;
@@ -207,7 +227,8 @@ public class TangentCurve extends DefaultCurve {
 			}
 
 			if (minAngleFraction < 0) {
-				throw new RuntimeException("Error calculating tangent angle fractions.");
+				throw new RuntimeException(
+						"Error calculating tangent angle fractions.");
 			}
 		}
 
@@ -220,29 +241,69 @@ public class TangentCurve extends DefaultCurve {
 
 		System.out.println("Displacement: " + _displacementParameter);
 	}
-	
+
 	@Override
 	public void draw(Graphics2D g, double xScale, double yScale) {
 		super.draw(g, xScale, yScale);
-		
+
 		Point scale = new Point(xScale, yScale);
 		Path2D.Double path = new Path2D.Double();
 		final double length = 10;
-		
+
 		for (int i = 0; i < size(); i++) {
 			Line tangent = getTangent(i);
-			Point start = tangent.getStart().mul(scale).sub(tangent.getDirection().mul(scale).mul(length / tangent.length()));
-			Point end = tangent.getStart().mul(scale).add(tangent.getDirection().mul(scale).mul(length / tangent.length()));
-			
+			Point start = tangent
+					.getStart()
+					.mul(scale)
+					.sub(tangent.getDirection().mul(scale)
+							.mul(length / tangent.length()));
+			Point end = tangent
+					.getStart()
+					.mul(scale)
+					.add(tangent.getDirection().mul(scale)
+							.mul(length / tangent.length()));
+
 			path.moveTo(start.getX(), start.getY());
 			path.lineTo(end.getX(), end.getY());
 		}
-		
+
 		final Stroke stroke = g.getStroke();
-		
-		g.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+
+		g.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_ROUND,
+				BasicStroke.JOIN_ROUND));
 		g.draw(path);
-		
+
 		g.setStroke(stroke);
+	}
+
+	@Override
+	public Curve createSubcurve(int offset, int length) {
+		TangentCurve subcurve = new TangentCurve(length, getTensionParameter(),
+				_displacementParameter, _tangentChooser);
+
+		for (int i = 0; i < length; i++) {
+			subcurve.setPoint(i, getPoint(i + offset));
+			subcurve.setTangent(i, getTangent(i + offset));
+		}
+
+		return subcurve;
+	}
+
+	protected TangentCurve doubleSize() {
+		return new TangentCurve(size() * 2 - 1, getTensionParameter(),
+				_displacementParameter, _tangentChooser);
+	}
+
+	protected TangentCurve incrementSize() {
+		return new TangentCurve(size() + 1, getTensionParameter(),
+				_displacementParameter, _tangentChooser);
+	}
+
+	public double getDisplacementParameter() {
+		return _displacementParameter;
+	}
+
+	public TangentChooser getTangentChooser() {
+		return _tangentChooser;
 	}
 }

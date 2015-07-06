@@ -1,9 +1,9 @@
 package geometry.scheme;
+
 import geometry.Line;
 import geometry.Point;
 
-
-public class DefaultTangentChooser implements TangentChooser {
+public class ClosedTangentChooser implements TangentChooser {
 	@Override
 	public Line chooseTangent(Point a, Point b, Point c) {
 		Point ac = c.sub(a);
@@ -12,16 +12,16 @@ public class DefaultTangentChooser implements TangentChooser {
 
 	@Override
 	public Line chooseFirstTangent(Point a, Point b, Point c) {
-		return new Line(b, c).orthogonal();
+		return chooseTangent(a, b, c);
 	}
 
 	@Override
 	public Line chooseLastTangent(Point a, Point b, Point c) {
-		return new Line(b, a).orthogonal();
+		return chooseTangent(a, b, c);
 	}
 
 	@Override
 	public void setStep(int step) {
-		// Ignore
+		// Ignore.
 	}
 }
