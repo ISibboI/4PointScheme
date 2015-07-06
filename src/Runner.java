@@ -49,10 +49,10 @@ public class Runner {
 
 		startingPoints = new TangentCurve(STARTING_POINTS[1], 1.0 / 16.0, 0.9, new DefaultTangentChooser());
 
-		scheme = new DefaultFourPointScheme(startingPoints, ITERATIONS, new DefaultPointSelector(),
-				new LongestFirstSubdivisionStrategy());
-//		scheme = new DefaultFourPointScheme(startingPoints, 7, new DefaultPointSelector(),
-//				new AllAtOnceSubdivisionStrategy());
+//		scheme = new DefaultFourPointScheme(startingPoints, ITERATIONS, new DefaultPointSelector(),
+//				new LongestFirstSubdivisionStrategy());
+		scheme = new DefaultFourPointScheme(startingPoints, 7, new DefaultPointSelector(),
+				new AllAtOnceSubdivisionStrategy());
 
 		System.out.println("Evaluating...");
 		scheme.evaluate();
