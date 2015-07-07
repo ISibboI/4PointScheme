@@ -17,11 +17,11 @@ public abstract class AbstractCurve implements Curve {
 
 		Point scale = new Point(xScale, yScale);
 		Path2D.Double path = new Path2D.Double();
-		Point start = points.next();
+		Point start = points.next().mul(scale);
 		path.moveTo(start.getX(), start.getY());
 
-		for (Point point : this) {
-			point = point.mul(scale);
+		while (points.hasNext()) {
+			Point point = points.next().mul(scale);
 			path.lineTo(point.getX(), point.getY());
 		}
 

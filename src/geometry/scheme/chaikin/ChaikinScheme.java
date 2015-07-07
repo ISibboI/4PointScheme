@@ -38,7 +38,7 @@ public class ChaikinScheme implements SubdivisionScheme {
 		Curve result;
 
 		if (_isClosed) {
-			result = new DefaultCurve(2 * curve.size());
+			result = new DefaultCurve(2 * curve.size() - 1);
 			result.setPoint(0,
 					curve.getPoint(0).mul(.75).add(curve.getPoint(1).mul(0.25)));
 			result.setPoint(result.size() - 1, result.getPoint(0));

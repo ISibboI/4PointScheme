@@ -33,7 +33,7 @@ public class Runner {
 	private static final boolean DRAW_DUALIZED = false;
 	private static final int STARTING_POINTS_INDEX = 1;
 
-	private static final int CHAIKIN_ITERATIONS = 2;
+	private static final int CHAIKIN_ITERATIONS = 5;
 
 	private static final double[] TENSION_VALUES = new double[] { 1.0 / 2.0,
 			1.0 / 4.0, 1.0 / 7.0, 1.0 / 8.0, 1.0 / 10.0, 1.0 / 12.0,
@@ -42,8 +42,8 @@ public class Runner {
 	private static final Point[][] STARTING_POINTS = new Point[][] {
 			{ new Point(0, 0), new Point(100, 0), new Point(100, 10),
 					new Point(99, 10), new Point(99, 0) },
-			{ new Point(0, 0), new Point(100, 0), new Point(100, 100),
-					new Point(0, 100), new Point(0, 0) },
+			{ new Point(-1, -1), new Point(1, -1), new Point(1, 1),
+					new Point(-1, 1), new Point(-1, -1) },
 			{ new Point(0, 0), new Point(100, 48), new Point(100, 52),
 					new Point(0, 100), new Point(0, 0) } };
 
