@@ -158,8 +158,8 @@ public class TangentCurve extends FourPointCurve {
 	}
 
 	@Override
-	public TangentCurve subdivide(final PointSelector pointSelector, final int step,
-			final int index) {
+	public TangentCurve subdivide(final PointSelector pointSelector,
+			final int step, final int index) {
 		_tangentChooser.setStep(step);
 		TangentCurve result = incrementSize();
 
@@ -249,7 +249,7 @@ public class TangentCurve extends FourPointCurve {
 
 		Point scale = new Point(xScale, yScale);
 		Path2D.Double path = new Path2D.Double();
-		final double length = 10;
+		final double length = 1;
 
 		for (int i = 0; i < size(); i++) {
 			Line tangent = getTangent(i);
@@ -272,7 +272,7 @@ public class TangentCurve extends FourPointCurve {
 
 		g.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_ROUND,
 				BasicStroke.JOIN_ROUND));
-		g.draw(path);
+//		g.draw(path);
 
 		g.setStroke(stroke);
 	}

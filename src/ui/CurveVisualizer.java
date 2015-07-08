@@ -10,6 +10,8 @@ import java.awt.Graphics2D;
 import javax.swing.JFrame;
 
 public class CurveVisualizer {
+	private static final int MARGIN = 50;
+	
 	private final DrawFrame _drawFrame;
 	private final int _width;
 	private final int _height;
@@ -47,15 +49,15 @@ public class CurveVisualizer {
 
 		double width = maxX - minX;
 		double height = maxY - minY;
-		double scaleX = (_width - 20) / width;
-		double scaleY = (_height - 20) / height;
+		double scaleX = (_width - 2 * MARGIN) / width;
+		double scaleY = (_height - 2 * MARGIN) / height;
 		double scale = Math.min(scaleX, scaleY);
 
 		Graphics2D g = _drawFrame.startRender();
 		g.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 		g.setColor(color);
 
-		g.translate(-minX * scale + 10, -minY * scale + 10);
+		g.translate(-minX * scale + MARGIN, -minY * scale + MARGIN);
 
 		curve.draw(g, scale, scale);
 
@@ -93,15 +95,15 @@ public class CurveVisualizer {
 
 		double width = maxX - minX;
 		double height = maxY - minY;
-		double scaleX = (_width - 20) / width;
-		double scaleY = (_height - 20) / height;
+		double scaleX = (_width - 2 * MARGIN) / width;
+		double scaleY = (_height - 2 * MARGIN) / height;
 		double scale = Math.min(scaleX, scaleY);
 
 		Graphics2D g = _drawFrame.startRender();
 		g.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 		g.setColor(color);
 
-		g.translate(-minX * scale + 10, -minY * scale + 10);
+		g.translate(-minX * scale + MARGIN, -minY * scale + MARGIN);
 
 		result.draw(g, scale, scale);
 		

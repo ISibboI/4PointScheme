@@ -33,7 +33,7 @@ public class Runner {
 	private static final boolean DRAW_DUALIZED = false;
 	private static final int STARTING_POINTS_INDEX = 1;
 
-	private static final int CHAIKIN_ITERATIONS = 5;
+	private static final int CHAIKIN_ITERATIONS = 7;
 
 	private static final double[] TENSION_VALUES = new double[] { 1.0 / 2.0,
 			1.0 / 4.0, 1.0 / 7.0, 1.0 / 8.0, 1.0 / 10.0, 1.0 / 12.0,
@@ -58,7 +58,7 @@ public class Runner {
 			Thread.sleep(1000);
 
 			System.out.println("Evaluating...");
-			Curve result = evaluateChaikin();
+			Curve result = evaluateFourPointScheme();
 			System.out.println("Evaluation complete.");
 
 			if (result.size() <= MAX_DRAWING_POINTS) {
