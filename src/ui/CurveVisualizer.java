@@ -10,7 +10,7 @@ import java.awt.Graphics2D;
 import javax.swing.JFrame;
 
 public class CurveVisualizer {
-	private static final int MARGIN = 50;
+	private static final int MARGIN = 100;
 	
 	private final DrawFrame _drawFrame;
 	private final int _width;

@@ -31,9 +31,10 @@ public class Runner {
 	private static final int MAX_DRAWING_POINTS = 1000;
 	private static final boolean DRAW_POINTS = true;
 	private static final boolean DRAW_DUALIZED = false;
-	private static final int STARTING_POINTS_INDEX = 1;
 
+	private static final int STARTING_POINTS_INDEX = 3;
 	private static final int CHAIKIN_ITERATIONS = 7;
+	private static final int FOURPOINT_ITERATIONS = 7;
 
 	private static final double[] TENSION_VALUES = new double[] { 1.0 / 2.0,
 			1.0 / 4.0, 1.0 / 7.0, 1.0 / 8.0, 1.0 / 10.0, 1.0 / 12.0,
@@ -44,8 +45,15 @@ public class Runner {
 					new Point(99, 10), new Point(99, 0) },
 			{ new Point(-1, -1), new Point(1, -1), new Point(1, 1),
 					new Point(-1, 1), new Point(-1, -1) },
-			{ new Point(0, 0), new Point(100, 48), new Point(100, 52),
-					new Point(0, 100), new Point(0, 0) } };
+			{ new Point(0, 0), new Point(1, .48), new Point(1, .52),
+					new Point(0, 1), new Point(0, 0) },
+			{ new Point(-1, 0),
+					new Point(-Math.sin(Math.PI / 6), Math.cos(Math.PI / 6)),
+					new Point(Math.sin(Math.PI / 6), Math.cos(Math.PI / 6)),
+					new Point(1, 0),
+					new Point(Math.sin(Math.PI / 6), -Math.cos(Math.PI / 6)),
+					new Point(-Math.sin(Math.PI / 6), -Math.cos(Math.PI / 6)),
+					new Point(-1, 0) } };
 
 	public static void main(String[] args) throws InterruptedException {
 		CurveVisualizer visualizer = null;
@@ -85,9 +93,9 @@ public class Runner {
 				STARTING_POINTS[STARTING_POINTS_INDEX]);
 		SubdivisionScheme scheme = new ChaikinScheme(startingPoints,
 				CHAIKIN_ITERATIONS, true);
-		
+
 		scheme.evaluate();
-		
+
 		return scheme.getResult();
 	}
 
@@ -101,8 +109,8 @@ public class Runner {
 		// new Point(99, 10), new Point(99, 0) }, tension, 0.9, new
 		// CornerCreatingTangentChooser());
 		//
-		// scheme = new DefaultFourPointScheme(startingPoints, ITERATIONS, new
-		// DefaultPointSelector(), new LongestFirstSubdivisionStrategy());
+		// scheme = new DefaultFourPointScheme(startingPoints, ITERATIONS,
+		// new DefaultPointSelector(), new LongestFirstSubdivisionStrategy());
 		//
 		// System.out.println("Evaluating...");
 		// scheme.evaluate();
@@ -111,18 +119,19 @@ public class Runner {
 
 		startingPoints = new C1TangentCurve(
 				STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0, 1,
-				new SelectableEndTangentChooser(new Point(10, 1), new Point(1,
-						1)));
-		// startingPoints = new TangentCurve(STARTING_POINTS[2], 1.0 / 16.0,
-		// 0.9,
-		// new ClosedAngleHalfingTangentChooser());
-		// startingPoints = new DefaultCurve(STARTING_POINTS[2], 1.0 / 16.0);
+				new ClosedTangentChooser());
+		// startingPoints = new TangentCurve(
+		// STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0, 0.9,
+		// new ClosedTangentChooser());
+		// startingPoints = new
+		// FourPointCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0);
 
 		// scheme = new DefaultFourPointScheme(startingPoints, ITERATIONS, new
 		// DefaultPointSelector(),
 		// new LongestFirstSubdivisionStrategy());
-		scheme = new DefaultFourPointScheme(startingPoints, 7,
-				new DefaultPointSelector(), new AllAtOnceSubdivisionStrategy());
+		scheme = new DefaultFourPointScheme(startingPoints,
+				FOURPOINT_ITERATIONS, new ClosedPointSelector(),
+				new AllAtOnceSubdivisionStrategy());
 		// scheme = new DefaultFourPointScheme(startingPoints, 7, new
 		// DefaultPointSelector(),
 		// new SizeLimitingSubdivisionStrategy(new

@@ -2,6 +2,7 @@ package geometry;
 
 import geometry.scheme.fourpoint.TangentCurve;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Path2D;
 import java.util.Iterator;
@@ -25,8 +26,6 @@ public abstract class AbstractCurve implements Curve {
 			path.lineTo(point.getX(), point.getY());
 		}
 
-		g.draw(path);
-
 		// Draw unconvexity
 		int unconvexity = CurveProperties.getUnconvexity(this);
 
@@ -41,6 +40,9 @@ public abstract class AbstractCurve implements Curve {
 			g.drawOval((int) (p.getX() - 4), (int) (p.getY() - 4), 8, 8);
 		}
 
+		Color tmp = g.getColor();
+		g.setColor(Color.RED);
+
 		// Draw curvature
 		for (int i = 1; i < size() - 1; i++) {
 			Point a = getPoint(i - 1);
@@ -54,20 +56,20 @@ public abstract class AbstractCurve implements Curve {
 			double distancesProduct = a.distanceTo(b) * b.distanceTo(c)
 					* c.distanceTo(a);
 
-			double curvature = .3 * crossProductLength / distancesProduct;
+			double curvature = .03 * crossProductLength / distancesProduct;
 
 			Point orthogonal = new Line(a, c).orthogonal().getDirection()
 					.normalize();
 			Point lineEnd = b.add(orthogonal.mul(curvature)).mul(scale);
 			b = b.mul(scale);
 
-			g.drawLine((int) b.getX(), (int) b.getY(), (int) lineEnd.getX(),
-					(int) lineEnd.getY());
-
-			System.out.println(curvature);
-			System.out.println(b);
-			System.out.println(lineEnd);
+			g.drawLine((int) Math.round(b.getX()), (int) Math.round(b.getY()),
+					(int) Math.round(lineEnd.getX()),
+					(int) Math.round(lineEnd.getY()));
 		}
+
+		g.setColor(tmp);
+		g.draw(path);
 	}
 
 	public abstract AbstractCurve clone();

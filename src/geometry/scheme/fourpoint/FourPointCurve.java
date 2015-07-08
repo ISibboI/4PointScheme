@@ -32,10 +32,6 @@ public class FourPointCurve extends DefaultCurve {
 		return new FourPointCurve(getPoints(), _tensionParameter);
 	}
 
-	
-
-	
-
 	private Point getNewPoint(final PointSelector selector) {
 		Point a = selector.getA(this);
 		Point b = selector.getB(this);
@@ -52,7 +48,8 @@ public class FourPointCurve extends DefaultCurve {
 
 	protected void copyPointsToSubdivided(FourPointCurve subdivided) {
 		if (subdivided.size() != size() * 2 - 1) {
-			throw new IllegalArgumentException("Subdivided curve has wrong length.");
+			throw new IllegalArgumentException(
+					"Subdivided curve has wrong length.");
 		}
 
 		for (int i = 0; i < subdivided.size(); i += 2) {
@@ -61,7 +58,8 @@ public class FourPointCurve extends DefaultCurve {
 	}
 
 	public FourPointCurve subdivide(PointSelector pointSelector, int step) {
-		FourPointCurve result = new FourPointCurve(size() * 2 - 1, _tensionParameter);
+		FourPointCurve result = new FourPointCurve(size() * 2 - 1,
+				_tensionParameter);
 
 		copyPointsToSubdivided(result);
 
@@ -73,8 +71,10 @@ public class FourPointCurve extends DefaultCurve {
 		return result;
 	}
 
-	public FourPointCurve subdivide(PointSelector pointSelector, int step, int index) {
-		FourPointCurve result = new FourPointCurve(size() + 1, _tensionParameter);
+	public FourPointCurve subdivide(PointSelector pointSelector, int step,
+			int index) {
+		FourPointCurve result = new FourPointCurve(size() + 1,
+				_tensionParameter);
 
 		for (int i = 0; i <= index; i++) {
 			result.setPoint(i, getPoint(i));
@@ -101,7 +101,8 @@ public class FourPointCurve extends DefaultCurve {
 
 	@Override
 	public FourPointCurve createSubcurve(int offset, int length) {
-		FourPointCurve subcurve = new FourPointCurve(length, getTensionParameter());
+		FourPointCurve subcurve = new FourPointCurve(length,
+				getTensionParameter());
 
 		for (int i = 0; i < length; i++) {
 			subcurve.setPoint(i, getPoint(i + offset));
