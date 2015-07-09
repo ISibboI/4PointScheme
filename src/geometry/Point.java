@@ -77,7 +77,7 @@ public class Point {
 	}
 	
 	public int hashCode() {
-		return Double.hashCode(_x) ^ ~Double.hashCode(_y);
+		return new Double(_x).hashCode() ^ ~new Double(_y).hashCode();
 	}
 
 	public Point normalize() {
