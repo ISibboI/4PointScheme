@@ -1,4 +1,4 @@
-package geometry.scheme;
+package geometry.scheme.fourpoint;
 
 import geometry.Curve;
 import geometry.PointSelector;
@@ -13,8 +13,8 @@ public class SizeLimitingSubdivisionStrategy implements SubdivisionStrategy {
 	}
 
 	@Override
-	public Curve subdivide(Curve currentCurve, PointSelector pointSelector, int step) {
-		Curve subdivided = _decorated.subdivide(currentCurve, pointSelector, step);
+	public FourPointCurve subdivide(FourPointCurve currentCurve, PointSelector pointSelector, int step) {
+		FourPointCurve subdivided = _decorated.subdivide(currentCurve, pointSelector, step);
 		
 		if (subdivided.size() > _maxLength) {
 			subdivided = subdivided.createSubcurve(0, _maxLength);

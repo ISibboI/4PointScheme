@@ -1,49 +1,26 @@
 package geometry.scheme;
 
+import java.util.Arrays;
+import java.util.Iterator;
+
 import geometry.AbstractCurve;
 import geometry.Curve;
 import geometry.Point;
 import geometry.PointSelector;
 
-import java.util.Arrays;
-import java.util.Iterator;
-
 public class DefaultCurve extends AbstractCurve {
 	private final Point[] _points;
-	private final double _tensionParameter;
 
-	public DefaultCurve(final Point[] points, final double tensionParameter) {
+	public DefaultCurve(final Point[] points) {
 		_points = Arrays.copyOf(points, points.length);
-		_tensionParameter = tensionParameter;
 	}
 
-	public DefaultCurve(int size, final double tensionParameter) {
+	public DefaultCurve(final int size) {
 		_points = new Point[size];
-		_tensionParameter = tensionParameter;
 	}
 
-	public DefaultCurve(DefaultCurve defaultCurve) {
-		this(defaultCurve._points, defaultCurve._tensionParameter);
-	}
-
-	@Override
-	public int size() {
-		return _points.length;
-	}
-
-	@Override
-	public DefaultCurve clone() {
-		return new DefaultCurve(_points, _tensionParameter);
-	}
-
-	@Override
-	public Point getPoint(int i) {
-		return _points[i];
-	}
-
-	@Override
-	public void setPoint(int i, Point point) {
-		_points[i] = point;
+	public DefaultCurve(final DefaultCurve defaultCurve) {
+		this(defaultCurve._points);
 	}
 
 	@Override
@@ -63,74 +40,34 @@ public class DefaultCurve extends AbstractCurve {
 		};
 	}
 
-	private Point getNewPoint(final PointSelector selector) {
-		Point a = selector.getA(this);
-		Point b = selector.getB(this);
-		Point c = selector.getC(this);
-		Point d = selector.getD(this);
-
-		Point ab = b.sub(a);
-		Point dc = c.sub(d);
-		Point displacement = ab.add(dc).mul(_tensionParameter);
-		Point center = b.add(c).mul(0.5);
-
-		return center.add(displacement);
-	}
-
-	protected void copyPointsToSubdivided(DefaultCurve subdivided) {
-		if (subdivided.size() != size() * 2 - 1) {
-			throw new IllegalArgumentException("Subdivided curve has wrong length.");
-		}
-
-		for (int i = 0; i < subdivided.size(); i += 2) {
-			subdivided.setPoint(i, getPoint(i / 2));
-		}
+	@Override
+	public DefaultCurve clone() {
+		return new DefaultCurve(getPoints());
 	}
 
 	@Override
-	public Curve subdivide(PointSelector pointSelector, int step) {
-		DefaultCurve result = new DefaultCurve(size() * 2 - 1, _tensionParameter);
-
-		copyPointsToSubdivided(result);
-
-		for (int i = 1; i < result.size() - 1; i += 2) {
-			pointSelector.setIndex(i / 2);
-			result.setPoint(i, getNewPoint(pointSelector));
-		}
-
-		return result;
+	public int size() {
+		return _points.length;
 	}
 
 	@Override
-	public Curve subdivide(PointSelector pointSelector, int step, int index) {
-		DefaultCurve result = new DefaultCurve(size() + 1, _tensionParameter);
-
-		for (int i = 0; i <= index; i++) {
-			result.setPoint(i, getPoint(i));
-		}
-
-		pointSelector.setIndex(index);
-		result.setPoint(index + 1, getNewPoint(pointSelector));
-
-		for (int i = index + 2; i < result.size(); i++) {
-			result.setPoint(i, getPoint(i - 1));
-		}
-
-		return result;
+	public Point getPoint(int i) {
+		return _points[i];
 	}
 
-	public double getTensionParameter() {
-		return _tensionParameter;
+	@Override
+	public void setPoint(int i, Point point) {
+		_points[i] = point;
 	}
 
 	@Override
 	public void printProperties() {
-		System.out.println("Tension: " + _tensionParameter);
+		// Do nothing.
 	}
 
 	@Override
 	public Curve createSubcurve(int offset, int length) {
-		DefaultCurve subcurve = new DefaultCurve(length, getTensionParameter());
+		DefaultCurve subcurve = new DefaultCurve(length);
 
 		for (int i = 0; i < length; i++) {
 			subcurve.setPoint(i, getPoint(i + offset));
@@ -138,4 +75,9 @@ public class DefaultCurve extends AbstractCurve {
 
 		return subcurve;
 	}
+
+	protected Point[] getPoints() {
+		return _points;
+	}
+
 }

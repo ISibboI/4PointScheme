@@ -1,17 +1,17 @@
-package geometry.scheme;
+package geometry.scheme.fourpoint;
 
 import geometry.Curve;
 import geometry.CurveProperties;
 import geometry.PointSelector;
 
 public class DefaultFourPointScheme implements FourPointScheme {
-	private final Curve _startingCurve;
-	private Curve _resultCurve;
+	private final FourPointCurve _startingCurve;
+	private FourPointCurve _resultCurve;
 	private final int _iterations;
 	private final PointSelector _pointSelector;
 	private final SubdivisionStrategy _subdivisionStrategy;
 
-	public DefaultFourPointScheme(final Curve startingPoints, final int iterations, final PointSelector pointSelector,
+	public DefaultFourPointScheme(final FourPointCurve startingPoints, final int iterations, final PointSelector pointSelector,
 			final SubdivisionStrategy subdivisionStrategy) {
 		_startingCurve = startingPoints.clone();
 		_iterations = iterations;
@@ -64,7 +64,7 @@ public class DefaultFourPointScheme implements FourPointScheme {
 
 	@Override
 	public void evaluate() {
-		Curve currentCurve = _startingCurve;
+		FourPointCurve currentCurve = _startingCurve;
 
 		printPreEvaluation();
 
@@ -73,7 +73,7 @@ public class DefaultFourPointScheme implements FourPointScheme {
 			
 			printDuringEvaluation(currentCurve, i+1);
 			
-			if (!CurveProperties.isConvex(currentCurve)) {
+			if (!CurveProperties.isConvex(currentCurve) && currentCurve instanceof TangentCurve) {
 				System.out.println("The generated curve is NOT convex anymore!");
 				System.out.println("Unconvexity with angle: " + CurveProperties.getAngle(currentCurve, CurveProperties.getUnconvexity(currentCurve), true));
 				break;

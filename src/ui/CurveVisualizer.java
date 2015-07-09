@@ -10,13 +10,15 @@ import java.awt.Graphics2D;
 import javax.swing.JFrame;
 
 public class CurveVisualizer {
+	private static final int MARGIN = 100;
+	
 	private final DrawFrame _drawFrame;
 	private final int _width;
 	private final int _height;
 
 	public CurveVisualizer() {
-		_width = 1000;
-		_height = 1000;
+		_width = 700;
+		_height = 700;
 		_drawFrame = new DrawFrame("4 Point Scheme", _width, _height, 400, 100, 1);
 		_drawFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
@@ -47,15 +49,15 @@ public class CurveVisualizer {
 
 		double width = maxX - minX;
 		double height = maxY - minY;
-		double scaleX = (_width - 20) / width;
-		double scaleY = (_height - 20) / height;
+		double scaleX = (_width - 2 * MARGIN) / width;
+		double scaleY = (_height - 2 * MARGIN) / height;
 		double scale = Math.min(scaleX, scaleY);
 
 		Graphics2D g = _drawFrame.startRender();
 		g.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 		g.setColor(color);
 
-		g.translate(-minX * scale + 10, -minY * scale + 10);
+		g.translate(-minX * scale + MARGIN, -minY * scale + MARGIN);
 
 		curve.draw(g, scale, scale);
 
@@ -93,15 +95,15 @@ public class CurveVisualizer {
 
 		double width = maxX - minX;
 		double height = maxY - minY;
-		double scaleX = (_width - 20) / width;
-		double scaleY = (_height - 20) / height;
+		double scaleX = (_width - 2 * MARGIN) / width;
+		double scaleY = (_height - 2 * MARGIN) / height;
 		double scale = Math.min(scaleX, scaleY);
 
 		Graphics2D g = _drawFrame.startRender();
 		g.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 		g.setColor(color);
 
-		g.translate(-minX * scale + 10, -minY * scale + 10);
+		g.translate(-minX * scale + MARGIN, -minY * scale + MARGIN);
 
 		result.draw(g, scale, scale);
 		

@@ -1,4 +1,4 @@
-package geometry.scheme;
+package geometry.scheme.fourpoint;
 
 import geometry.Curve;
 import geometry.Line;

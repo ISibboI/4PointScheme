@@ -1,5 +1,7 @@
 package geometry;
 
+import geometry.scheme.fourpoint.TangentCurve;
+
 import java.util.Iterator;
 
 public final class CurveProperties {
@@ -46,8 +48,10 @@ public final class CurveProperties {
 			last = current;
 			current = points.next();
 
-			double currentRatio = preLast.distanceTo(last) / last.distanceTo(current);
-			double lastRatio = prePreLast.distanceTo(preLast) / preLast.distanceTo(last);
+			double currentRatio = preLast.distanceTo(last)
+					/ last.distanceTo(current);
+			double lastRatio = prePreLast.distanceTo(preLast)
+					/ preLast.distanceTo(last);
 			double ratio = lastRatio / currentRatio;
 
 			if (ratio < 1) {
@@ -76,7 +80,8 @@ public final class CurveProperties {
 			last = current;
 			current = points.next();
 
-			double ratio = prePreLast.distanceTo(preLast) / last.distanceTo(current);
+			double ratio = prePreLast.distanceTo(preLast)
+					/ last.distanceTo(current);
 
 			if (ratio < 1) {
 				ratio = 1 / ratio;
@@ -114,12 +119,13 @@ public final class CurveProperties {
 
 		return maxAngle;
 	}
-	
+
 	public static double getAngle(final Curve curve, final int index) {
 		return getAngle(curve, index, false);
 	}
 
-	public static double getAngle(final Curve curve, final int index, final boolean verbose) {
+	public static double getAngle(final Curve curve, final int index,
+			final boolean verbose) {
 		Point a = curve.getPoint(index - 1);
 		Point b = curve.getPoint(index);
 		Point c = curve.getPoint(index + 1);
@@ -129,22 +135,26 @@ public final class CurveProperties {
 
 		double angleAB = Math.atan2(ab.getY(), ab.getX());
 		double angleBC = Math.atan2(bc.getY(), bc.getX());
-		
+
 		double angle = angleBC - angleAB;
-		
+
 		if (verbose) {
 			System.out.println("AngleAB: " + angleAB);
 			System.out.println("AngleBC: " + angleBC);
 		}
-		
+
 		if (angle < -Math.PI) {
 			angle += 2 * Math.PI;
 		}
-		
+
+		if (angle > Math.PI) {
+			angle -= 2 * Math.PI;
+		}
+
 		if (angle > Math.PI || angle < -Math.PI) {
 			throw new RuntimeException("Calculated wrong angle: " + angle);
 		}
-		
+
 		return angle;
 	}
 
@@ -159,7 +169,7 @@ public final class CurveProperties {
 
 		return true;
 	}
-	
+
 	public static int getUnconvexity(final Curve curve) {
 		double sign = getAngle(curve, 1);
 
@@ -171,26 +181,79 @@ public final class CurveProperties {
 
 		return -1;
 	}
-	
+
 	public static double maxAngleRatio(final Curve curve) {
 		double lastAngle = getAngle(curve, 1);
 		double maxRatio = 1;
-		
+
 		for (int i = 2; i < curve.size() - 1; i++) {
 			double currentAngle = getAngle(curve, i);
 			double ratio = currentAngle / lastAngle;
-			
+
 			if (ratio < 1) {
 				ratio = 1 / ratio;
 			}
-			
+
 			if (ratio > maxRatio) {
 				maxRatio = ratio;
 			}
-			
+
 			lastAngle = currentAngle;
 		}
-		
+
 		return maxRatio;
+	}
+
+	public static TangentCurve dualize(final TangentCurve curve) {
+		final TangentCurve dualizedCurve = new TangentCurve(curve.size(),
+				curve.getTensionParameter(), curve.getDisplacementParameter(),
+				curve.getTangentChooser());
+
+		for (int i = 0; i < curve.size(); i++) {
+			Line tangent = curve.getTangent(i);
+			Point point = curve.getPoint(i);
+
+			dualizedCurve.setPoint(i, dualize(tangent));
+			dualizedCurve.setTangent(i, dualize(point));
+		}
+
+		return dualizedCurve;
+	}
+
+	private static Point dualize(final Line tangent) {
+		double a = tangent.getStart().getX();
+		double b = tangent.getStart().getY();
+		double c = tangent.getEnd().getX();
+		double d = tangent.getEnd().getY();
+
+		double u = (1 - d / b) / (a * d / b - c);
+		double v = -(u * c + 1) / d;
+
+		if (!(Double.isFinite(u) && Double.isFinite(v))) {
+			throw new RuntimeException("Cannot dualize tangent");
+		}
+
+		return new Point(u, v);
+	}
+
+	private static Line dualize(final Point point) {
+		final double a = point.getX();
+		final double b = point.getY();
+
+		if (a == 0 || b == 0) {
+			throw new RuntimeException("Cannot dualize point");
+		}
+
+		return new Line(new Point(1 / a, -2 / b), new Point(-2 / a, 1 / b));
+	}
+
+	public static Point findCenterPoint(final Curve curve) {
+		Point center = new Point(0, 0);
+
+		for (Point p : curve) {
+			center = center.add(p);
+		}
+
+		return center.div(curve.size());
 	}
 }

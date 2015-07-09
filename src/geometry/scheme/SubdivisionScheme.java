@@ -2,10 +2,8 @@ package geometry.scheme;
 
 import geometry.Curve;
 
-public interface FourPointScheme {
-
+public interface SubdivisionScheme {
 	Curve getResult();
 
 	void evaluate();
-
 }

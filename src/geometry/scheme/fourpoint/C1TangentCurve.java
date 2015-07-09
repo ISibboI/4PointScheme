@@ -1,8 +1,9 @@
-package geometry.scheme;
+package geometry.scheme.fourpoint;
 
 import geometry.Line;
 import geometry.Point;
 import geometry.PointSelector;
+import geometry.scheme.TangentChooser;
 
 public class C1TangentCurve extends TangentCurve {
 	public C1TangentCurve(final int size, final double tensionParameter, final double displacementParameter,
@@ -19,7 +20,7 @@ public class C1TangentCurve extends TangentCurve {
 		super(tangentCurve);
 	}
 
-	public C1TangentCurve(final DefaultCurve defaultCurve, final double displacementParameter,
+	public C1TangentCurve(final FourPointCurve defaultCurve, final double displacementParameter,
 			final TangentChooser tangentChooser) {
 		super(defaultCurve, displacementParameter, tangentChooser);
 	}
@@ -35,22 +36,22 @@ public class C1TangentCurve extends TangentCurve {
 		Point cb = b.sub(c);
 
 		Point bs = tb.getDirection();
-
-		if (bs.scalarProduct(bc) < 0.00001) {
+		
+		if (bs.scalarProduct(bc) < 0) {
 			bs = bs.mul(-1);
 		}
 
 		Point cs = tc.getDirection();
-
-		if (cs.scalarProduct(cb) < 0.00001) {
+		
+		if (cs.scalarProduct(cb) < 0) {
 			cs = cs.mul(-1);
 		}
 
 		bc = bc.normalize();
 		cb = cb.normalize();
-		bs = bs.normalize();
-		cs = cs.normalize();
-
+		bs = bs.normalize().mul(getDisplacementParameter());
+		cs = cs.normalize().mul(getDisplacementParameter());
+		
 		Line lb = new Line(b, b.add(bs).add(bc));
 		Line lc = new Line(c, c.add(cs).add(cb));
 

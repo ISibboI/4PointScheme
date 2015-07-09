@@ -1,11 +1,11 @@
-package geometry.scheme;
+package geometry.scheme.fourpoint;
 
 import geometry.Curve;
 import geometry.PointSelector;
 
 public class LongestFirstSubdivisionStrategy implements SubdivisionStrategy {
 	@Override
-	public Curve subdivide(Curve curve, PointSelector pointSelector, int step) {
+	public FourPointCurve subdivide(FourPointCurve curve, PointSelector pointSelector, int step) {
 //		int longestEdgeIndex = (int) (Math.random() * curve.size() - 1);
 //		double longestEdge = curve.getPoint(longestEdgeIndex).squaredDistanceTo(curve.getPoint(longestEdgeIndex + 1));
 		int longestEdgeIndex = -1;
