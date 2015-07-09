@@ -30,30 +30,30 @@ public class C1TangentCurve extends TangentCurve {
 		Point c = selector.getC(this);
 		Line tb = getTangent(selector.getIndex());
 		Line tc = getTangent(selector.getIndex() + 1);
-		
+
 		Point bc = c.sub(b);
 		Point cb = b.sub(c);
-		
+
 		Point bs = tb.getDirection();
-		
+
 		if (bs.scalarProduct(bc) < 0.00001) {
 			bs = bs.mul(-1);
 		}
-		
+
 		Point cs = tc.getDirection();
-		
+
 		if (cs.scalarProduct(cb) < 0.00001) {
 			cs = cs.mul(-1);
 		}
-		
+
 		bc = bc.normalize();
 		cb = cb.normalize();
 		bs = bs.normalize();
 		cs = cs.normalize();
-		
+
 		Line lb = new Line(b, b.add(bs).add(bc));
 		Line lc = new Line(c, c.add(cs).add(cb));
-		
+
 		double cut = lb.cut(lc);
 		return lb.getStart().add(lb.getDirection().mul(cut));
 	}
@@ -62,12 +62,13 @@ public class C1TangentCurve extends TangentCurve {
 	public TangentCurve clone() {
 		return new C1TangentCurve(this);
 	}
-	
+
 	@Override
 	protected TangentCurve doubleSize() {
-		return new C1TangentCurve(size() * 2 - 1, getTensionParameter(), getDisplacementParameter(), getTangentChooser());
+		return new C1TangentCurve(size() * 2 - 1, getTensionParameter(), getDisplacementParameter(),
+				getTangentChooser());
 	}
-	
+
 	@Override
 	protected TangentCurve incrementSize() {
 		return new C1TangentCurve(size() + 1, getTensionParameter(), getDisplacementParameter(), getTangentChooser());
