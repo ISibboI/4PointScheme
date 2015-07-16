@@ -56,7 +56,7 @@ public class TangentCurve extends FourPointCurve {
 		chooseAllTangents();
 	}
 
-	protected void chooseAllTangents() {
+	public void chooseAllTangents() {
 		_tangents[0] = _tangentChooser.chooseFirstTangent(getPoint(size() - 2), getPoint(0), getPoint(1));
 		_tangents[size() - 1] = _tangentChooser.chooseLastTangent(getPoint(size() - 2), getPoint(size() - 1),
 				getPoint(1));

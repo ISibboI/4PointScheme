@@ -221,6 +221,17 @@ public final class CurveProperties {
 		double c = tangent.getEnd().getX();
 		double d = tangent.getEnd().getY();
 
+		int count = 0;
+		while ((b == 0 || d == 0 || a * d / b - c == 0) && count < 10) {
+			Point direction = tangent.getDirection();
+			a -= direction.getX();
+			b -= direction.getY();
+			c += direction.getX();
+			d += direction.getY();
+
+			count++;
+		}
+
 		double u = (1 - d / b) / (a * d / b - c);
 		double v = -(u * c + 1) / d;
 
@@ -235,8 +246,16 @@ public final class CurveProperties {
 		final double a = point.getX();
 		final double b = point.getY();
 
-		if (a == 0 || b == 0) {
+		if (a == 0 && b == 0) {
 			throw new RuntimeException("Cannot dualize point");
+		}
+
+		if (a == 0) {
+			return new Line(new Point(-1, 1 / b), new Point(1, 1 / b));
+		}
+
+		if (b == 0) {
+			return new Line(new Point(1 / a, -1), new Point(1 / a, 1));
 		}
 
 		return new Line(new Point(1 / a, -2 / b), new Point(-2 / a, 1 / b));

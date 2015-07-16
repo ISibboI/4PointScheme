@@ -1,17 +1,21 @@
 package ui;
 
 import geometry.Curve;
+import geometry.CurveProperties;
 import geometry.Point;
+import geometry.scheme.fourpoint.TangentCurve;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.Collection;
+import java.util.Iterator;
 
 import javax.swing.JFrame;
 
 public class CurveVisualizer {
 	private static final int MARGIN = 100;
-	
+
 	private final DrawFrame _drawFrame;
 	private final int _width;
 	private final int _height;
@@ -69,27 +73,29 @@ public class CurveVisualizer {
 		_drawFrame.dispose();
 	}
 
-	public void drawCurves(Curve startingPoints, Curve result, Color color) {
+	public void drawCurves(Curve startingPoints, Collection<? extends Curve> curves, Collection<Color> colors) {
 		double minX = Double.POSITIVE_INFINITY;
 		double minY = Double.POSITIVE_INFINITY;
 		double maxX = Double.NEGATIVE_INFINITY;
 		double maxY = Double.NEGATIVE_INFINITY;
 
-		for (Point point : result) {
-			if (point.getX() < minX) {
-				minX = point.getX();
-			}
+		for (Curve curve : curves) {
+			for (Point point : curve) {
+				if (point.getX() < minX) {
+					minX = point.getX();
+				}
 
-			if (point.getY() < minY) {
-				minY = point.getY();
-			}
+				if (point.getY() < minY) {
+					minY = point.getY();
+				}
 
-			if (point.getX() > maxX) {
-				maxX = point.getX();
-			}
+				if (point.getX() > maxX) {
+					maxX = point.getX();
+				}
 
-			if (point.getY() > maxY) {
-				maxY = point.getY();
+				if (point.getY() > maxY) {
+					maxY = point.getY();
+				}
 			}
 		}
 
@@ -101,14 +107,23 @@ public class CurveVisualizer {
 
 		Graphics2D g = _drawFrame.startRender();
 		g.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-		g.setColor(color);
 
 		g.translate(-minX * scale + MARGIN, -minY * scale + MARGIN);
 
-		result.draw(g, scale, scale);
-		
+		Iterator<Color> colorIterator = colors.iterator();
+
+		for (Curve curve : curves) {
+			g.setColor(colorIterator.next());
+			curve.draw(g, scale, scale);
+		}
+
 		g.setColor(Color.GRAY);
 		startingPoints.draw(g, scale, scale);
+
+		if (startingPoints instanceof TangentCurve) {
+			g.setColor(Color.DARK_GRAY);
+			CurveProperties.dualize((TangentCurve) startingPoints).draw(g, scale, scale);
+		}
 
 		_drawFrame.switchToUIRender();
 		_drawFrame.finishRender();
