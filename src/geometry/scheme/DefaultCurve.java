@@ -1,12 +1,11 @@
 package geometry.scheme;
 
-import java.util.Arrays;
-import java.util.Iterator;
-
 import geometry.AbstractCurve;
 import geometry.Curve;
 import geometry.Point;
-import geometry.PointSelector;
+
+import java.util.Arrays;
+import java.util.Iterator;
 
 public class DefaultCurve extends AbstractCurve {
 	private final Point[] _points;
@@ -36,6 +35,11 @@ public class DefaultCurve extends AbstractCurve {
 			@Override
 			public Point next() {
 				return _points[current++];
+			}
+
+			@Override
+			public void remove() {
+				throw new UnsupportedOperationException();
 			}
 		};
 	}

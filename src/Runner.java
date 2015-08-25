@@ -22,6 +22,9 @@ import geometry.scheme.fourpoint.SizeLimitingSubdivisionStrategy;
 import geometry.scheme.fourpoint.TangentCurve;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 
 import ui.CurveVisualizer;
 
@@ -30,30 +33,25 @@ public class Runner {
 	private static final int ITERATIONS = 900;
 	private static final int MAX_DRAWING_POINTS = 1000;
 	private static final boolean DRAW_POINTS = true;
-	private static final boolean DRAW_DUALIZED = false;
 
 	private static final int STARTING_POINTS_INDEX = 2;
 	private static final int CHAIKIN_ITERATIONS = 7;
 	private static final int FOURPOINT_ITERATIONS = 7;
 
-	private static final double[] TENSION_VALUES = new double[] { 1.0 / 2.0,
-			1.0 / 4.0, 1.0 / 7.0, 1.0 / 8.0, 1.0 / 10.0, 1.0 / 12.0,
-			1.0 / 16.0, 1.0 / 32.0, 1.0 / 64.0, 1.0 / 128.0 };
+	private static final double[] TENSION_VALUES = new double[] { 1.0 / 2.0, 1.0 / 4.0, 1.0 / 7.0, 1.0 / 8.0,
+			1.0 / 10.0, 1.0 / 12.0, 1.0 / 16.0, 1.0 / 32.0, 1.0 / 64.0, 1.0 / 128.0 };
 
 	private static final Point[][] STARTING_POINTS = new Point[][] {
-			{ new Point(0, 0), new Point(100, 0), new Point(100, 10),
-					new Point(99, 10), new Point(99, 0) },
-			{ new Point(-1, -1), new Point(1, -1), new Point(1, 1),
-					new Point(-1, 1), new Point(-1, -1) },
-			{ new Point(0, 0), new Point(1, .48), new Point(1, .52),
-					new Point(0, 1), new Point(0, 0) },
-			{ new Point(-1, 0),
-					new Point(-Math.sin(Math.PI / 6), Math.cos(Math.PI / 6)),
-					new Point(Math.sin(Math.PI / 6), Math.cos(Math.PI / 6)),
-					new Point(1, 0),
+			{ new Point(0, 0), new Point(100, 0), new Point(100, 10), new Point(99, 10), new Point(99, 0) },
+			{ new Point(-1, -1), new Point(1, -1), new Point(1, 1), new Point(-1, 1), new Point(-1, -1) },
+			{ new Point(-1, 1), new Point(1, .05), new Point(1, -.05), new Point(-1, -1), new Point(-1, 1) },
+			{ new Point(-1, 0), new Point(-Math.sin(Math.PI / 6), Math.cos(Math.PI / 6)),
+					new Point(Math.sin(Math.PI / 6), Math.cos(Math.PI / 6)), new Point(1, 0),
 					new Point(Math.sin(Math.PI / 6), -Math.cos(Math.PI / 6)),
-					new Point(-Math.sin(Math.PI / 6), -Math.cos(Math.PI / 6)),
-					new Point(-1, 0) } };
+					new Point(-Math.sin(Math.PI / 6), -Math.cos(Math.PI / 6)), new Point(-1, 0) } };
+
+	private static final Collection<Color> COLOR_COLLECTION = Arrays.asList(new Color[] { Color.BLACK, Color.BLUE,
+			Color.GREEN });
 
 	public static void main(String[] args) throws InterruptedException {
 		CurveVisualizer visualizer = null;
@@ -66,19 +64,13 @@ public class Runner {
 			Thread.sleep(1000);
 
 			System.out.println("Evaluating...");
-			Curve result = evaluateFourPointScheme();
+			Collection<? extends Curve> result = evaluateChaikinC1TangentComparison();
 			System.out.println("Evaluation complete.");
 
 			if (result.size() <= MAX_DRAWING_POINTS) {
-				if (DRAW_DUALIZED && result instanceof TangentCurve) {
-					TangentCurve tangentResult = (TangentCurve) result;
-					result = CurveProperties.dualize(tangentResult);
-				}
-
 				System.out.println("Drawing curve...");
-				visualizer.drawCurves(new DefaultCurve(
-						STARTING_POINTS[STARTING_POINTS_INDEX]), result,
-						Color.BLACK);
+				visualizer.drawCurves(new TangentCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 0, 0,
+						new ClosedAngleHalfingTangentChooser()), result, COLOR_COLLECTION);
 				System.out.println("Curve drawn.");
 			} else {
 				visualizer.dispose();
@@ -89,14 +81,35 @@ public class Runner {
 	}
 
 	public static Curve evaluateChaikin() {
-		DefaultCurve startingPoints = new DefaultCurve(
-				STARTING_POINTS[STARTING_POINTS_INDEX]);
-		SubdivisionScheme scheme = new ChaikinScheme(startingPoints,
-				CHAIKIN_ITERATIONS, true);
+		DefaultCurve startingPoints = new DefaultCurve(STARTING_POINTS[STARTING_POINTS_INDEX]);
+		SubdivisionScheme scheme = new ChaikinScheme(startingPoints, CHAIKIN_ITERATIONS, true);
 
 		scheme.evaluate();
 
 		return scheme.getResult();
+	}
+
+	public static Collection<? extends Curve> evaluateChaikinC1TangentComparison() {
+		Collection<TangentCurve> result = new ArrayList<>(2);
+		TangentCurve startingPoints = new TangentCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 1 / 16.0, 0.9,
+				new ClosedAngleHalfingTangentChooser());
+		TangentCurve dualStartingPoints = CurveProperties.dualize(startingPoints);
+
+		SubdivisionScheme normalScheme = new DefaultFourPointScheme(startingPoints, FOURPOINT_ITERATIONS,
+				new ClosedPointSelector(), new AllAtOnceSubdivisionStrategy());
+		SubdivisionScheme dualScheme = new DefaultFourPointScheme(dualStartingPoints, FOURPOINT_ITERATIONS,
+				new ClosedPointSelector(), new AllAtOnceSubdivisionStrategy());
+
+		normalScheme.evaluate();
+		dualScheme.evaluate();
+
+		((TangentCurve) normalScheme.getResult()).chooseAllTangents();
+		((TangentCurve) dualScheme.getResult()).chooseAllTangents();
+
+		result.add((TangentCurve) normalScheme.getResult());
+		result.add(CurveProperties.dualize((TangentCurve) dualScheme.getResult()));
+
+		return result;
 	}
 
 	public static Curve evaluateFourPointScheme() {
@@ -117,9 +130,8 @@ public class Runner {
 		// System.out.println("Evaluation complete.");
 		// }
 
-		startingPoints = new C1TangentCurve(
-				STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0, 1,
-				new ClosedAngleHalfingTangentChooser());
+		startingPoints = new C1TangentCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0, 1,
+				new ClosedTangentChooser());
 		// startingPoints = new TangentCurve(
 		// STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0, 0.9,
 		// new ClosedTangentChooser());
@@ -129,8 +141,7 @@ public class Runner {
 		// scheme = new DefaultFourPointScheme(startingPoints, ITERATIONS, new
 		// DefaultPointSelector(),
 		// new LongestFirstSubdivisionStrategy());
-		scheme = new DefaultFourPointScheme(startingPoints,
-				FOURPOINT_ITERATIONS, new ClosedPointSelector(),
+		scheme = new DefaultFourPointScheme(startingPoints, FOURPOINT_ITERATIONS, new ClosedPointSelector(),
 				new AllAtOnceSubdivisionStrategy());
 		// scheme = new DefaultFourPointScheme(startingPoints, 7, new
 		// DefaultPointSelector(),

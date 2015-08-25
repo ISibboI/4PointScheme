@@ -48,10 +48,8 @@ public final class CurveProperties {
 			last = current;
 			current = points.next();
 
-			double currentRatio = preLast.distanceTo(last)
-					/ last.distanceTo(current);
-			double lastRatio = prePreLast.distanceTo(preLast)
-					/ preLast.distanceTo(last);
+			double currentRatio = preLast.distanceTo(last) / last.distanceTo(current);
+			double lastRatio = prePreLast.distanceTo(preLast) / preLast.distanceTo(last);
 			double ratio = lastRatio / currentRatio;
 
 			if (ratio < 1) {
@@ -80,8 +78,7 @@ public final class CurveProperties {
 			last = current;
 			current = points.next();
 
-			double ratio = prePreLast.distanceTo(preLast)
-					/ last.distanceTo(current);
+			double ratio = prePreLast.distanceTo(preLast) / last.distanceTo(current);
 
 			if (ratio < 1) {
 				ratio = 1 / ratio;
@@ -124,8 +121,7 @@ public final class CurveProperties {
 		return getAngle(curve, index, false);
 	}
 
-	public static double getAngle(final Curve curve, final int index,
-			final boolean verbose) {
+	public static double getAngle(final Curve curve, final int index, final boolean verbose) {
 		Point a = curve.getPoint(index - 1);
 		Point b = curve.getPoint(index);
 		Point c = curve.getPoint(index + 1);
@@ -205,9 +201,8 @@ public final class CurveProperties {
 	}
 
 	public static TangentCurve dualize(final TangentCurve curve) {
-		final TangentCurve dualizedCurve = new TangentCurve(curve.size(),
-				curve.getTensionParameter(), curve.getDisplacementParameter(),
-				curve.getTangentChooser());
+		final TangentCurve dualizedCurve = new TangentCurve(curve.size(), curve.getTensionParameter(),
+				curve.getDisplacementParameter(), curve.getTangentChooser());
 
 		for (int i = 0; i < curve.size(); i++) {
 			Line tangent = curve.getTangent(i);
@@ -226,10 +221,21 @@ public final class CurveProperties {
 		double c = tangent.getEnd().getX();
 		double d = tangent.getEnd().getY();
 
+		int count = 0;
+		while ((b == 0 || d == 0 || a * d / b - c == 0) && count < 10) {
+			Point direction = tangent.getDirection();
+			a -= direction.getX();
+			b -= direction.getY();
+			c += direction.getX();
+			d += direction.getY();
+
+			count++;
+		}
+
 		double u = (1 - d / b) / (a * d / b - c);
 		double v = -(u * c + 1) / d;
 
-		if (!(Double.isFinite(u) && Double.isFinite(v))) {
+		if (Double.isInfinite(u) || Double.isInfinite(v) || Double.isNaN(u) || Double.isNaN(v)) {
 			throw new RuntimeException("Cannot dualize tangent");
 		}
 
@@ -240,8 +246,16 @@ public final class CurveProperties {
 		final double a = point.getX();
 		final double b = point.getY();
 
-		if (a == 0 || b == 0) {
+		if (a == 0 && b == 0) {
 			throw new RuntimeException("Cannot dualize point");
+		}
+
+		if (a == 0) {
+			return new Line(new Point(-1, 1 / b), new Point(1, 1 / b));
+		}
+
+		if (b == 0) {
+			return new Line(new Point(1 / a, -1), new Point(1 / a, 1));
 		}
 
 		return new Line(new Point(1 / a, -2 / b), new Point(-2 / a, 1 / b));

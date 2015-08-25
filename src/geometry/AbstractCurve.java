@@ -42,6 +42,8 @@ public abstract class AbstractCurve implements Curve {
 
 		Color tmp = g.getColor();
 		g.setColor(Color.RED);
+		
+		final double curvatureFactor = .03;
 
 		// Draw curvature
 		for (int i = 1; i < size() - 1; i++) {
@@ -49,27 +51,41 @@ public abstract class AbstractCurve implements Curve {
 			Point b = getPoint(i);
 			Point c = getPoint(i + 1);
 
-			double crossProductLength = c.getX() * (b.getY() - a.getY())
-					+ b.getX() * a.getY() - c.getY() * (b.getX() - a.getX())
-					- b.getY() * a.getX();
+			double curvature = curvatureFactor * getCurvature(a, b, c);
 
-			double distancesProduct = a.distanceTo(b) * b.distanceTo(c)
-					* c.distanceTo(a);
-
-			double curvature = .03 * crossProductLength / distancesProduct;
-
-			Point orthogonal = new Line(a, c).orthogonal().getDirection()
-					.normalize();
+			Point orthogonal = new Line(a, c).orthogonal().getDirection().normalize();
 			Point lineEnd = b.add(orthogonal.mul(curvature)).mul(scale);
 			b = b.mul(scale);
 
-			g.drawLine((int) Math.round(b.getX()), (int) Math.round(b.getY()),
-					(int) Math.round(lineEnd.getX()),
+			g.drawLine((int) Math.round(b.getX()), (int) Math.round(b.getY()), (int) Math.round(lineEnd.getX()),
 					(int) Math.round(lineEnd.getY()));
 		}
+		
+		// Closed curve: Draw end point curvature
+		Point a = getPoint(size() - 2);
+		Point b = getPoint(0);
+		Point c = getPoint(1);
+		
+		double curvature = curvatureFactor * getCurvature(a, b, c);
+		
+		Point orthogonal = new Line(a, c).orthogonal().getDirection().normalize();
+		Point lineEnd = b.add(orthogonal.mul(curvature)).mul(scale);
+		b = b.mul(scale);
+
+		g.drawLine((int) Math.round(b.getX()), (int) Math.round(b.getY()), (int) Math.round(lineEnd.getX()),
+				(int) Math.round(lineEnd.getY()));
 
 		g.setColor(tmp);
 		g.draw(path);
+	}
+
+	public double getCurvature(Point a, Point b, Point c) {
+		double crossProductLength = c.getX() * (b.getY() - a.getY()) + b.getX() * a.getY() - c.getY()
+				* (b.getX() - a.getX()) - b.getY() * a.getX();
+
+		double distancesProduct = a.distanceTo(b) * b.distanceTo(c) * c.distanceTo(a);
+
+		return crossProductLength / distancesProduct;
 	}
 
 	public abstract AbstractCurve clone();
