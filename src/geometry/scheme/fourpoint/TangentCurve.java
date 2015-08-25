@@ -1,6 +1,5 @@
 package geometry.scheme.fourpoint;
 
-import geometry.Curve;
 import geometry.Line;
 import geometry.Point;
 import geometry.PointSelector;
@@ -143,9 +142,10 @@ public class TangentCurve extends FourPointCurve {
 			result.setTangent(i, getTangent(i / 2));
 		}
 
-		result.chooseAllNewTangents();
+//		result.chooseAllNewTangents();
 		result.setTangent(0, getTangent(0));
 		result.setTangent(result.size() - 1, getTangent(size() - 1));
+		result.chooseAllTangents();
 
 		return result;
 	}
@@ -256,7 +256,7 @@ public class TangentCurve extends FourPointCurve {
 		final Stroke stroke = g.getStroke();
 
 		g.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-		// g.draw(path);
+//		 g.draw(path);
 
 		g.setStroke(stroke);
 	}
