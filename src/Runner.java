@@ -32,7 +32,7 @@ public class Runner {
 	private static final boolean DRAW_POINTS = true;
 	private static final boolean DRAW_DUALIZED = false;
 
-	private static final int STARTING_POINTS_INDEX = 3;
+	private static final int STARTING_POINTS_INDEX = 2;
 	private static final int CHAIKIN_ITERATIONS = 7;
 	private static final int FOURPOINT_ITERATIONS = 7;
 
@@ -119,12 +119,12 @@ public class Runner {
 
 		startingPoints = new C1TangentCurve(
 				STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0, 1,
-				new ClosedTangentChooser());
+				new ClosedAngleHalfingTangentChooser());
 		// startingPoints = new TangentCurve(
 		// STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0, 0.9,
 		// new ClosedTangentChooser());
-		// startingPoints = new
-		// FourPointCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0);
+//		 startingPoints = new
+//		 FourPointCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0);
 
 		// scheme = new DefaultFourPointScheme(startingPoints, ITERATIONS, new
 		// DefaultPointSelector(),
