@@ -33,7 +33,7 @@ import ui.CurveVisualizer;
 public class Runner {
 	private static final int ITERATIONS = 900;
 	private static final int MAX_DRAWING_POINTS = 1000;
-	private static final boolean DRAW_POINTS = true;
+	private static final boolean DRAW_POINTS = false;
 
 	private static final int STARTING_POINTS_INDEX = 2;
 	private static final int CHAIKIN_ITERATIONS = 7;
@@ -63,11 +63,13 @@ public class Runner {
 
 		if (DRAW_POINTS) {
 			Thread.sleep(1000);
+		}
 
-			System.out.println("Evaluating...");
-			Collection<? extends Curve> result = evaluateFourPointScheme();
-			System.out.println("Evaluation complete.");
+		System.out.println("Evaluating...");
+		Collection<? extends Curve> result = evaluateFourPointScheme();
+		System.out.println("Evaluation complete.");
 
+		if (DRAW_POINTS) {
 			if (result.size() <= MAX_DRAWING_POINTS) {
 				System.out.println("Drawing curve...");
 				visualizer.drawCurves(new TangentCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 0, 0,
@@ -131,13 +133,13 @@ public class Runner {
 		// System.out.println("Evaluation complete.");
 		// }
 
-//		startingPoints = new C1TangentCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0, 1,
+		// startingPoints = new
+		// C1TangentCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0, 1,
+		// new ClosedTangentChooser());
+//		startingPoints = new TangentCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0, 0.9,
 //				new ClosedTangentChooser());
-		 startingPoints = new TangentCurve(
-		 STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0, 0.9,
-		 new ClosedAngleHalfingTangentChooser());
-//		 startingPoints = new
-//		 FourPointCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0);
+		 startingPoints = new
+		 FourPointCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0);
 
 		// scheme = new DefaultFourPointScheme(startingPoints, ITERATIONS, new
 		// DefaultPointSelector(),
