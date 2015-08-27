@@ -71,7 +71,7 @@ public class Runner {
 			if (result.size() <= MAX_DRAWING_POINTS) {
 				System.out.println("Drawing curve...");
 				visualizer.drawCurves(new TangentCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 0, 0,
-						new ClosedAngleHalfingTangentChooser()), result, COLOR_COLLECTION);
+						new ClosedTangentChooser()), result, COLOR_COLLECTION);
 				System.out.println("Curve drawn.");
 			} else {
 				visualizer.dispose();
@@ -133,10 +133,11 @@ public class Runner {
 
 //		startingPoints = new C1TangentCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0, 1,
 //				new ClosedTangentChooser());
-		// startingPoints = new TangentCurve(
-		// STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0, 0.9,
-		// new ClosedTangentChooser());
-		startingPoints = new FourPointCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0);
+		 startingPoints = new TangentCurve(
+		 STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0, 0.9,
+		 new ClosedAngleHalfingTangentChooser());
+//		 startingPoints = new
+//		 FourPointCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0);
 
 		// scheme = new DefaultFourPointScheme(startingPoints, ITERATIONS, new
 		// DefaultPointSelector(),

@@ -7,8 +7,8 @@ public class ClosedAngleHalfingTangentChooser extends ClosedTangentChooser {
 	@Override
 	public Line chooseTangent(Point a, Point b, Point c) {
 		Point ab = b.sub(a).normalize();
-		Point cb = b.sub(c).normalize();
+		Point bc = c.sub(b).normalize();
 		
-		return new Line(b, b.add(ab.sub(cb)));
+		return new Line(b, b.add(ab.add(bc)));
 	}
 }

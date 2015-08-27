@@ -2,9 +2,16 @@ package geometry;
 
 import geometry.scheme.fourpoint.TangentCurve;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.Iterator;
 
+import org.nevec.rjm.BigDecimalMath;
+
 public final class CurveProperties {
+	private static final MathContext MATH_CONTEXT = new MathContext(100, RoundingMode.HALF_UP);
+	
 	private CurveProperties() {
 	}
 
@@ -125,7 +132,7 @@ public final class CurveProperties {
 		Point a = curve.getPoint(index - 1);
 		Point b = curve.getPoint(index);
 		Point c = curve.getPoint(index + 1);
-
+			
 		Point ab = b.sub(a);
 		Point bc = c.sub(b);
 
@@ -153,6 +160,30 @@ public final class CurveProperties {
 
 		return angle;
 	}
+	
+	public static BigDecimal getExactAngle(final Curve curve, final int index) {
+		Point a = curve.getPoint(index - 1);
+		Point b = curve.getPoint(index);
+		Point c = curve.getPoint(index + 1);
+
+		BigDecimal bx = BigDecimal.valueOf(b.getX());
+		BigDecimal by = BigDecimal.valueOf(b.getY());
+		
+		BigDecimal abx = bx.subtract(BigDecimal.valueOf(a.getX()));
+		BigDecimal aby = by.subtract(BigDecimal.valueOf(a.getY()));
+		BigDecimal bcx = BigDecimal.valueOf(c.getX()).subtract(bx);
+		BigDecimal bcy = BigDecimal.valueOf(c.getY()).subtract(by);
+		
+		BigDecimal dot = abx.multiply(bcx).add(aby.multiply(bcy));
+		dot = dot.divide(BigDecimalMath.root(2, abx.multiply(abx).add(aby.multiply(aby))), MATH_CONTEXT);
+		dot = dot.divide(BigDecimalMath.root(2, bcx.multiply(bcx).add(bcy.multiply(bcy))), MATH_CONTEXT);
+		
+		if (dot.doubleValue() == 1) {
+			return BigDecimal.ZERO;
+		}
+		
+		return BigDecimalMath.acos(dot);
+	}
 
 	public static boolean isConvex(final Curve curve) {
 		double sign = getAngle(curve, 1);
@@ -179,25 +210,31 @@ public final class CurveProperties {
 	}
 
 	public static double maxAngleRatio(final Curve curve) {
-		double lastAngle = getAngle(curve, 1);
-		double maxRatio = 1;
+		BigDecimal lastAngle = getExactAngle(curve, 1);
+		BigDecimal maxRatio = BigDecimal.ONE;
 
 		for (int i = 2; i < curve.size() - 1; i++) {
-			double currentAngle = getAngle(curve, i);
-			double ratio = currentAngle / lastAngle;
+			BigDecimal currentAngle = getExactAngle(curve, i);
+			
+			if (currentAngle.equals(BigDecimal.ZERO)) {
+				System.out.println("Angle error too large");
+				currentAngle = BigDecimal.ONE.divide(BigDecimal.valueOf(1024 * 1024));
+			}
+			
+			BigDecimal ratio = currentAngle.divide(lastAngle, MATH_CONTEXT);
 
-			if (ratio < 1) {
-				ratio = 1 / ratio;
+			if (ratio.compareTo(BigDecimal.ONE) < 0) {
+				ratio = BigDecimal.ONE.divide(ratio, MATH_CONTEXT);
 			}
 
-			if (ratio > maxRatio) {
+			if (ratio.compareTo(maxRatio) > 0) {
 				maxRatio = ratio;
 			}
 
 			lastAngle = currentAngle;
 		}
 
-		return maxRatio;
+		return maxRatio.doubleValue();
 	}
 
 	public static TangentCurve dualize(final TangentCurve curve) {

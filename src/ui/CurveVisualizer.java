@@ -1,9 +1,7 @@
 package ui;
 
 import geometry.Curve;
-import geometry.CurveProperties;
 import geometry.Point;
-import geometry.scheme.fourpoint.TangentCurve;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -14,15 +12,15 @@ import java.util.Iterator;
 import javax.swing.JFrame;
 
 public class CurveVisualizer {
-	private static final int MARGIN = 100;
+	private static final int MARGIN = 150;
 
 	private final DrawFrame _drawFrame;
 	private final int _width;
 	private final int _height;
 
 	public CurveVisualizer() {
-		_width = 700;
-		_height = 700;
+		_width = 1000;
+		_height = 1000;
 		_drawFrame = new DrawFrame("4 Point Scheme", _width, _height, 400, 100, 1);
 		_drawFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
@@ -120,10 +118,10 @@ public class CurveVisualizer {
 		g.setColor(Color.GRAY);
 		startingPoints.draw(g, scale, scale);
 
-		if (startingPoints instanceof TangentCurve) {
-			g.setColor(Color.DARK_GRAY);
-			CurveProperties.dualize((TangentCurve) startingPoints).draw(g, scale, scale);
-		}
+//		if (startingPoints instanceof TangentCurve) {
+//			g.setColor(Color.DARK_GRAY);
+//			CurveProperties.dualize((TangentCurve) startingPoints).draw(g, scale, scale);
+//		}
 
 		_drawFrame.switchToUIRender();
 		_drawFrame.finishRender();

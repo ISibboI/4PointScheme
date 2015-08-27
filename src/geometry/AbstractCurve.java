@@ -43,7 +43,7 @@ public abstract class AbstractCurve implements Curve {
 		Color tmp = g.getColor();
 		g.setColor(Color.RED);
 		
-		final double curvatureFactor = .03;
+		final double curvatureFactor = .001;
 
 		// Draw curvature
 		for (int i = 1; i < size() - 1; i++) {
@@ -53,6 +53,10 @@ public abstract class AbstractCurve implements Curve {
 
 			double curvature = curvatureFactor * getCurvature(a, b, c);
 
+//			if (a.getX() == c.getX()) {
+//				curvature *= -1;
+//			}
+			
 			Point orthogonal = new Line(a, c).orthogonal().getDirection().normalize();
 			Point lineEnd = b.add(orthogonal.mul(curvature)).mul(scale);
 			b = b.mul(scale);
@@ -74,7 +78,7 @@ public abstract class AbstractCurve implements Curve {
 
 		g.drawLine((int) Math.round(b.getX()), (int) Math.round(b.getY()), (int) Math.round(lineEnd.getX()),
 				(int) Math.round(lineEnd.getY()));
-
+		
 		g.setColor(tmp);
 		g.draw(path);
 	}
