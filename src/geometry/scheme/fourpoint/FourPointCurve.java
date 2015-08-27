@@ -1,13 +1,8 @@
 package geometry.scheme.fourpoint;
 
-import geometry.AbstractCurve;
-import geometry.Curve;
 import geometry.Point;
 import geometry.PointSelector;
 import geometry.scheme.DefaultCurve;
-
-import java.util.Arrays;
-import java.util.Iterator;
 
 public class FourPointCurve extends DefaultCurve {
 	private final double _tensionParameter;

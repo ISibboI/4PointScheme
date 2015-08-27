@@ -1,6 +1,5 @@
 package geometry.scheme.fourpoint;
 
-import geometry.Curve;
 import geometry.Line;
 import geometry.Point;
 import geometry.PointSelector;

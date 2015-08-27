@@ -25,6 +25,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 
 import ui.CurveVisualizer;
 
@@ -64,7 +65,7 @@ public class Runner {
 			Thread.sleep(1000);
 
 			System.out.println("Evaluating...");
-			Collection<? extends Curve> result = evaluateChaikinC1TangentComparison();
+			Collection<? extends Curve> result = evaluateFourPointScheme();
 			System.out.println("Evaluation complete.");
 
 			if (result.size() <= MAX_DRAWING_POINTS) {
@@ -112,7 +113,7 @@ public class Runner {
 		return result;
 	}
 
-	public static Curve evaluateFourPointScheme() {
+	public static Collection<? extends Curve> evaluateFourPointScheme() {
 		FourPointScheme scheme = null;
 		FourPointCurve startingPoints = null;
 
@@ -130,13 +131,12 @@ public class Runner {
 		// System.out.println("Evaluation complete.");
 		// }
 
-		startingPoints = new C1TangentCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0, 1,
-				new ClosedTangentChooser());
+//		startingPoints = new C1TangentCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0, 1,
+//				new ClosedTangentChooser());
 		// startingPoints = new TangentCurve(
 		// STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0, 0.9,
 		// new ClosedTangentChooser());
-		// startingPoints = new
-		// FourPointCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0);
+		startingPoints = new FourPointCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0);
 
 		// scheme = new DefaultFourPointScheme(startingPoints, ITERATIONS, new
 		// DefaultPointSelector(),
@@ -150,6 +150,6 @@ public class Runner {
 
 		scheme.evaluate();
 
-		return scheme.getResult();
+		return Collections.nCopies(1, scheme.getResult());
 	}
 }

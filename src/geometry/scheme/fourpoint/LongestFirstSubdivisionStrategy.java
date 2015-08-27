@@ -1,6 +1,5 @@
 package geometry.scheme.fourpoint;
 
-import geometry.Curve;
 import geometry.PointSelector;
 
 public class LongestFirstSubdivisionStrategy implements SubdivisionStrategy {
