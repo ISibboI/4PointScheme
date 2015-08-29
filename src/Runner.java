@@ -136,10 +136,10 @@ public class Runner {
 		// startingPoints = new
 		// C1TangentCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0, 1,
 		// new ClosedTangentChooser());
-//		startingPoints = new TangentCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0, 0.9,
-//				new ClosedTangentChooser());
-		 startingPoints = new
-		 FourPointCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0);
+		startingPoints = new TangentCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0, 0.8,
+				new ClosedTangentChooser());
+//		 startingPoints = new
+//		 FourPointCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16);
 
 		// scheme = new DefaultFourPointScheme(startingPoints, ITERATIONS, new
 		// DefaultPointSelector(),

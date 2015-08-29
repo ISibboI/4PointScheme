@@ -43,7 +43,7 @@ public abstract class AbstractCurve implements Curve {
 		Color tmp = g.getColor();
 		g.setColor(Color.RED);
 		
-		final double curvatureFactor = .001;
+		final double curvatureFactor = 0.03;//.001;
 
 		// Draw curvature
 		for (int i = 1; i < size() - 1; i++) {
