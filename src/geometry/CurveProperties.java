@@ -3,6 +3,7 @@ package geometry;
 import geometry.scheme.fourpoint.TangentCurve;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.Iterator;
@@ -175,8 +176,11 @@ public final class CurveProperties {
 		BigDecimal bcy = BigDecimal.valueOf(c.getY()).subtract(by);
 
 		BigDecimal dot = abx.multiply(bcx).add(aby.multiply(bcy));
-		dot = dot.divide(BigDecimalMath.root(2, abx.multiply(abx).add(aby.multiply(aby))), MATH_CONTEXT);
-		dot = dot.divide(BigDecimalMath.root(2, bcx.multiply(bcx).add(bcy.multiply(bcy))), MATH_CONTEXT);
+		BigDecimal mulDot = dot;
+		BigDecimal abLengthSquare = abx.multiply(abx).add(aby.multiply(aby));
+		BigDecimal bcLengthSquare = bcx.multiply(bcx).add(bcy.multiply(bcy));
+		BigDecimal divisor = BigDecimalMath.sqrt(abLengthSquare.multiply(bcLengthSquare), MATH_CONTEXT);
+		dot = dot.divide(divisor, MATH_CONTEXT);
 
 		if (dot.doubleValue() == 1) {
 			return BigDecimal.ZERO;
@@ -218,12 +222,18 @@ public final class CurveProperties {
 
 	public static double maxAngleRatio(final Curve curve) {
 		BigDecimal lastAngle = getExactAngle(curve, 1);
+		int i = 2;
+		
+		while (lastAngle.signum() == 0) {
+			lastAngle = getExactAngle(curve, i++);
+		}
+		
 		BigDecimal maxRatio = BigDecimal.ONE;
 
-		for (int i = 2; i < curve.size() - 1; i++) {
+		for (; i < curve.size() - 1; i++) {
 			BigDecimal currentAngle = getExactAngle(curve, i);
 
-			if (currentAngle.equals(BigDecimal.ZERO)) {
+			if (currentAngle.signum() == 0) {
 				System.out.println("Angle error too large at: " + ((double)i / (curve.size() - 1)) + "%");
 				continue;
 			}
