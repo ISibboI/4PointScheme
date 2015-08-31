@@ -33,9 +33,9 @@ import ui.CurveVisualizer;
 public class Runner {
 	private static final int ITERATIONS = 900;
 	private static final int MAX_DRAWING_POINTS = 1000;
-	private static final boolean DRAW_POINTS = false;
+	private static final boolean DRAW_POINTS = true;
 
-	private static final int STARTING_POINTS_INDEX = 2;
+	private static final int STARTING_POINTS_INDEX = 4;
 	private static final int CHAIKIN_ITERATIONS = 7;
 	private static final int FOURPOINT_ITERATIONS = 7;
 
@@ -49,7 +49,9 @@ public class Runner {
 			{ new Point(-1, 0), new Point(-Math.sin(Math.PI / 6), Math.cos(Math.PI / 6)),
 					new Point(Math.sin(Math.PI / 6), Math.cos(Math.PI / 6)), new Point(1, 0),
 					new Point(Math.sin(Math.PI / 6), -Math.cos(Math.PI / 6)),
-					new Point(-Math.sin(Math.PI / 6), -Math.cos(Math.PI / 6)), new Point(-1, 0) } };
+					new Point(-Math.sin(Math.PI / 6), -Math.cos(Math.PI / 6)), new Point(-1, 0) },
+			{ new Point(-1, -1), new Point(1, -1), new Point(1, 1), new Point(-1, 1), new Point(-1.1, 0),
+					new Point(-1, -1) } };
 
 	private static final Collection<Color> COLOR_COLLECTION = Arrays.asList(new Color[] { Color.BLACK, Color.BLUE,
 			Color.GREEN });
@@ -136,10 +138,10 @@ public class Runner {
 		// startingPoints = new
 		// C1TangentCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0, 1,
 		// new ClosedTangentChooser());
-		startingPoints = new TangentCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 32.0, 0.5,
-				new ClosedTangentChooser());
-//		 startingPoints = new
-//		 FourPointCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 64.0);
+//		startingPoints = new TangentCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0, 0.8,
+//				new ClosedTangentChooser());
+		 startingPoints = new
+		 FourPointCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0);
 
 		// scheme = new DefaultFourPointScheme(startingPoints, ITERATIONS, new
 		// DefaultPointSelector(),
