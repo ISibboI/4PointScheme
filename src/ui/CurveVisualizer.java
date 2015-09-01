@@ -116,7 +116,7 @@ public class CurveVisualizer {
 		}
 
 		g.setColor(Color.GRAY);
-		startingPoints.draw(g, scale, scale);
+//		startingPoints.draw(g, scale, scale);
 
 //		if (startingPoints instanceof TangentCurve) {
 //			g.setColor(Color.DARK_GRAY);
