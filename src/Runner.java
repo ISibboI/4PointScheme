@@ -2,6 +2,7 @@ import geometry.Curve;
 import geometry.CurveProperties;
 import geometry.Point;
 import geometry.scheme.ClosedAngleHalfingTangentChooser;
+import geometry.scheme.ClosedCircleTangentChooser;
 import geometry.scheme.ClosedTangentChooser;
 import geometry.scheme.CornerCreatingTangentChooser;
 import geometry.scheme.DefaultCurve;
@@ -35,9 +36,9 @@ public class Runner {
 	private static final int MAX_DRAWING_POINTS = 1000;
 	private static final boolean DRAW_POINTS = true;
 
-	private static final int STARTING_POINTS_INDEX = 5;
+	private static final int STARTING_POINTS_INDEX = 7;
 	private static final int CHAIKIN_ITERATIONS = 7;
-	private static final int FOURPOINT_ITERATIONS = 3;
+	private static final int FOURPOINT_ITERATIONS = 7;
 
 	private static final double[] TENSION_VALUES = new double[] { 1.0 / 2.0, 1.0 / 4.0, 1.0 / 7.0, 1.0 / 8.0,
 			1.0 / 10.0, 1.0 / 12.0, 1.0 / 16.0, 1.0 / 32.0, 1.0 / 64.0, 1.0 / 128.0 };
@@ -52,7 +53,10 @@ public class Runner {
 					new Point(-Math.sin(Math.PI / 6), -Math.cos(Math.PI / 6)), new Point(-1, 0) },
 			{ new Point(-1, -1), new Point(1, -1), new Point(1, 1), new Point(-1, 1), new Point(-1.1, 0),
 					new Point(-1, -1) },
-			{ new Point(-1, -1), new Point(1, -1), new Point(-1, 1), new Point(-1, 3), new Point(1, 3) } };
+			{ new Point(-1, -1), new Point(1, -1), new Point(-1, 1), new Point(-1, 3), new Point(1, 3) },
+			{ new Point(-1, 1), new Point(-0.5, .02), new Point(-0.5, -.02), new Point(-1, -1), new Point(-1, 1) },
+			{ new Point(-0.2, 0), new Point(-0.05, -0.2), new Point(0.05, -0.2), new Point(0.2, 0), new Point(0.1, 1), new Point(0, 1.04), new Point(-0.1, 1),
+					new Point(-0.2, 0) } };
 
 	private static final Collection<Color> COLOR_COLLECTION = Arrays.asList(new Color[] { Color.BLACK, Color.BLUE,
 			Color.GREEN });
@@ -136,18 +140,18 @@ public class Runner {
 		// System.out.println("Evaluation complete.");
 		// }
 
-		// startingPoints = new
-		// C1TangentCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0, 1,
-		// new ClosedTangentChooser());
-		// startingPoints = new
-		// TangentCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0, 0.9,
-		// new ClosedTangentChooser());
-		startingPoints = new FourPointCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0);
+//		 startingPoints = new
+//		 C1TangentCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0, 1,
+//		 new ClosedTangentChooser());
+		startingPoints = new TangentCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0, 0.9,
+				new ClosedAngleHalfingTangentChooser());
+//		 startingPoints = new
+//		 FourPointCurve(STARTING_POINTS[STARTING_POINTS_INDEX], 1.0 / 16.0);
 
 		// scheme = new DefaultFourPointScheme(startingPoints, ITERATIONS, new
 		// DefaultPointSelector(),
 		// new LongestFirstSubdivisionStrategy());
-		scheme = new DefaultFourPointScheme(startingPoints, FOURPOINT_ITERATIONS, new DefaultPointSelector(),
+		scheme = new DefaultFourPointScheme(startingPoints, FOURPOINT_ITERATIONS, new ClosedPointSelector(),
 				new AllAtOnceSubdivisionStrategy());
 		// scheme = new DefaultFourPointScheme(startingPoints, 7, new
 		// DefaultPointSelector(),

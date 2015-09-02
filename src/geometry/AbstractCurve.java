@@ -27,58 +27,62 @@ public abstract class AbstractCurve implements Curve {
 		}
 
 		// Draw unconvexity
-//		int unconvexity = CurveProperties.getUnconvexity(this);
-//
-//		if (unconvexity != -1 && this instanceof TangentCurve) {
-//			Point p = getPoint(unconvexity).mul(scale);
-//			g.drawOval((int) (p.getX() - 5), (int) (p.getY() - 5), 10, 10);
-//
-//			p = getPoint(unconvexity + 1).mul(scale);
-//			g.drawOval((int) (p.getX() - 4), (int) (p.getY() - 4), 8, 8);
-//
-//			p = getPoint(unconvexity - 1).mul(scale);
-//			g.drawOval((int) (p.getX() - 4), (int) (p.getY() - 4), 8, 8);
-//		}
-//
+		// int unconvexity = CurveProperties.getUnconvexity(this);
+		//
+		// if (unconvexity != -1 && this instanceof TangentCurve) {
+		// Point p = getPoint(unconvexity).mul(scale);
+		// g.drawOval((int) (p.getX() - 5), (int) (p.getY() - 5), 10, 10);
+		//
+		// p = getPoint(unconvexity + 1).mul(scale);
+		// g.drawOval((int) (p.getX() - 4), (int) (p.getY() - 4), 8, 8);
+		//
+		// p = getPoint(unconvexity - 1).mul(scale);
+		// g.drawOval((int) (p.getX() - 4), (int) (p.getY() - 4), 8, 8);
+		// }
+		//
 		Color tmp = g.getColor();
 		g.setColor(Color.RED);
-		
-		final double curvatureFactor = 0.03;//.001;
+
+		final double curvatureFactor = 0.03;// .001;
 
 		// Draw curvature
-//		for (int i = 1; i < size() - 1; i++) {
-//			Point a = getPoint(i - 1);
-//			Point b = getPoint(i);
-//			Point c = getPoint(i + 1);
-//
-//			double curvature = curvatureFactor * getCurvature(a, b, c);
-//
-////			if (a.getX() == c.getX()) {
-////				curvature *= -1;
-////			}
-//			
-//			Point orthogonal = new Line(a, c).orthogonal().getDirection().normalize();
-//			Point lineEnd = b.add(orthogonal.mul(curvature)).mul(scale);
-//			b = b.mul(scale);
-//
-//			g.drawLine((int) Math.round(b.getX()), (int) Math.round(b.getY()), (int) Math.round(lineEnd.getX()),
-//					(int) Math.round(lineEnd.getY()));
-//		}
-		
-		// Closed curve: Draw end point curvature
-		Point a = getPoint(size() - 2);
-		Point b = getPoint(0);
-		Point c = getPoint(1);
-		
-		double curvature = curvatureFactor * getCurvature(a, b, c);
-		
-		Point orthogonal = new Line(a, c).orthogonal().getDirection().normalize();
-		Point lineEnd = b.add(orthogonal.mul(curvature)).mul(scale);
-		b = b.mul(scale);
+		// for (int i = 1; i < size() - 1; i++) {
+		// Point a = getPoint(i - 1);
+		// Point b = getPoint(i);
+		// Point c = getPoint(i + 1);
+		//
+		// double curvature = curvatureFactor * getCurvature(a, b, c);
+		//
+		// // if (a.getX() == c.getX()) {
+		// // curvature *= -1;
+		// // }
+		//
+		// Point orthogonal = new Line(a,
+		// c).orthogonal().getDirection().normalize();
+		// Point lineEnd = b.add(orthogonal.mul(curvature)).mul(scale);
+		// b = b.mul(scale);
+		//
+		// g.drawLine((int) Math.round(b.getX()), (int) Math.round(b.getY()),
+		// (int) Math.round(lineEnd.getX()),
+		// (int) Math.round(lineEnd.getY()));
+		// }
 
-		g.drawLine((int) Math.round(b.getX()), (int) Math.round(b.getY()), (int) Math.round(lineEnd.getX()),
-				(int) Math.round(lineEnd.getY()));
-		
+		// Closed curve: Draw end point curvature
+		// Point a = getPoint(size() - 2);
+		// Point b = getPoint(0);
+		// Point c = getPoint(1);
+		//
+		// double curvature = curvatureFactor * getCurvature(a, b, c);
+		//
+		// Point orthogonal = new Line(a,
+		// c).orthogonal().getDirection().normalize();
+		// Point lineEnd = b.add(orthogonal.mul(curvature)).mul(scale);
+		// b = b.mul(scale);
+		//
+		// g.drawLine((int) Math.round(b.getX()), (int) Math.round(b.getY()),
+		// (int) Math.round(lineEnd.getX()),
+		// (int) Math.round(lineEnd.getY()));
+
 		g.setColor(tmp);
 		g.draw(path);
 	}
